@@ -47,7 +47,10 @@ cd apps/api && cp .env.example .env
 pnpm dev                           # http://localhost:3000  (Swagger em /docs)
 pnpm dev:worker                    # classificação, WhatsApp e notificações
 
-# Dados de desenvolvimento: cotações de exemplo + um telefone admin
+# Dados de demonstração (APAGA o banco local): 8 produtores com fotos reais, 11 ofertas,
+# compradores, pedidos pagos e uma doação. Lista os telefones para entrar no fim.
+pnpm seed:demo -- --reset
+# Ou só cotações de exemplo + um telefone admin, sem apagar nada:
 node dist/scripts/seed-development-data.js +5511900000001
 
 # Web
