@@ -3,8 +3,10 @@
  * ser distribuídas. Usamos alternativas abertas (Google Fonts, licença OFL) com o mesmo papel.
  */
 export const fontFamilies = {
-  sans: `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
-  serif: `'Source Serif 4', Georgia, serif`,
+  // Texto e interface
+  sans: `'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
+  // Serifa de display com contraste, no papel da MongoDB Value Serif
+  serif: `'Fraunces', Georgia, serif`,
   mono: `'Source Code Pro', Menlo, monospace`,
 } as const;
 

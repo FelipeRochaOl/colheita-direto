@@ -21,11 +21,14 @@ export function SignupPage() {
   const navigate = useNavigate();
   const selectedRole = (searchParams.get('perfil') as UserRole) ?? 'producer';
 
-  if (!isLoading && !session) return <Navigate to={`/entrar?voltar=/cadastro?perfil=${selectedRole}`} replace />;
+  if (!isLoading && !session)
+    return <Navigate to={`/entrar?voltar=/cadastro?perfil=${selectedRole}`} replace />;
 
   const goHome = (role: UserRole) => () => navigate(HOME_BY_ROLE[role] ?? '/');
   const alreadyHas = (role: UserRole) =>
-    hasRole(role) ? <Alert type="success" showIcon message="Você já tem este perfil." className="mb-4!" /> : null;
+    hasRole(role) ? (
+      <Alert type="success" showIcon message="Você já tem este perfil." className="mb-4!" />
+    ) : null;
 
   return (
     <PageSection title="Escolha seu perfil">
@@ -34,10 +37,46 @@ export function SignupPage() {
           activeKey={selectedRole}
           onChange={(role) => setSearchParams({ perfil: role })}
           items={[
-            { key: 'producer', label: 'Produtor', children: <>{alreadyHas('producer')}<ProducerSignupForm onRegistered={goHome('producer')} /></> },
-            { key: 'buyer', label: 'Comprador', children: <>{alreadyHas('buyer')}<BuyerSignupForm onRegistered={goHome('buyer')} /></> },
-            { key: 'service_provider', label: 'Transporte e serviços', children: <>{alreadyHas('service_provider')}<ServiceProviderSignupForm onRegistered={goHome('service_provider')} /></> },
-            { key: 'ngo', label: 'ONG / banco de alimentos', children: <>{alreadyHas('ngo')}<NgoSignupForm onRegistered={goHome('ngo')} /></> },
+            {
+              key: 'producer',
+              label: 'Produtor',
+              children: (
+                <>
+                  {alreadyHas('producer')}
+                  <ProducerSignupForm onRegistered={goHome('producer')} />
+                </>
+              ),
+            },
+            {
+              key: 'buyer',
+              label: 'Comprador',
+              children: (
+                <>
+                  {alreadyHas('buyer')}
+                  <BuyerSignupForm onRegistered={goHome('buyer')} />
+                </>
+              ),
+            },
+            {
+              key: 'service_provider',
+              label: 'Transporte e serviços',
+              children: (
+                <>
+                  {alreadyHas('service_provider')}
+                  <ServiceProviderSignupForm onRegistered={goHome('service_provider')} />
+                </>
+              ),
+            },
+            {
+              key: 'ngo',
+              label: 'ONG / banco de alimentos',
+              children: (
+                <>
+                  {alreadyHas('ngo')}
+                  <NgoSignupForm onRegistered={goHome('ngo')} />
+                </>
+              ),
+            },
           ]}
         />
       </div>

@@ -12,7 +12,13 @@ interface OrderListProps {
   pendingOrderId?: string | null;
 }
 
-export function OrderList({ orders, perspective, onAccept, onConfirmDelivery, pendingOrderId }: OrderListProps) {
+export function OrderList({
+  orders,
+  perspective,
+  onAccept,
+  onConfirmDelivery,
+  pendingOrderId,
+}: OrderListProps) {
   if (!orders.length) return <Empty description="Nenhum pedido ainda" />;
   return (
     <div className="flex flex-col gap-4">
@@ -20,7 +26,11 @@ export function OrderList({ orders, perspective, onAccept, onConfirmDelivery, pe
         <Card
           key={order.id}
           title={<span>Pedido de {new Date(order.createdAt).toLocaleDateString('pt-BR')}</span>}
-          extra={<Tag color={order.status === 'CREATED' ? 'orange' : 'green'}>{orderStatusLabels[order.status]}</Tag>}
+          extra={
+            <Tag color={order.status === 'CREATED' ? 'orange' : 'green'}>
+              {orderStatusLabels[order.status]}
+            </Tag>
+          }
         >
           <ul className="mb-4">
             {order.items.map((item) => (
@@ -30,21 +40,39 @@ export function OrderList({ orders, perspective, onAccept, onConfirmDelivery, pe
             ))}
           </ul>
           <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm mb-4">
-            <span>Produtos: <MoneyText value={order.productsTotal} /></span>
-            <span>Serviços (frete etc.): <MoneyText value={order.servicesTotal} /></span>
+            <span>
+              Produtos: <MoneyText value={order.productsTotal} />
+            </span>
+            <span>
+              Serviços (frete etc.): <MoneyText value={order.servicesTotal} />
+            </span>
             {perspective === 'producer' && (
-              <span>Você recebe: <MoneyText value={order.productsTotal - order.platformFee} strong /></span>
+              <span>
+                Você recebe: <MoneyText value={order.productsTotal - order.platformFee} strong />
+              </span>
             )}
-            <span>Total: <MoneyText value={order.total} strong /></span>
+            <span>
+              Total: <MoneyText value={order.total} strong />
+            </span>
           </div>
-          {perspective === 'buyer' && order.status === 'CREATED' && <PixPaymentPanel order={order} />}
+          {perspective === 'buyer' && order.status === 'CREATED' && (
+            <PixPaymentPanel order={order} />
+          )}
           {perspective === 'producer' && order.status === 'PAID' && (
-            <Button type="primary" loading={pendingOrderId === order.id} onClick={() => onAccept?.(order.id)}>
+            <Button
+              type="primary"
+              loading={pendingOrderId === order.id}
+              onClick={() => onAccept?.(order.id)}
+            >
               Aceitar pedido
             </Button>
           )}
           {perspective === 'buyer' && ['ACCEPTED', 'IN_TRANSIT'].includes(order.status) && (
-            <Button type="primary" loading={pendingOrderId === order.id} onClick={() => onConfirmDelivery?.(order.id)}>
+            <Button
+              type="primary"
+              loading={pendingOrderId === order.id}
+              onClick={() => onConfirmDelivery?.(order.id)}
+            >
               Confirmar recebimento
             </Button>
           )}

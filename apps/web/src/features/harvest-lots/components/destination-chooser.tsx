@@ -15,18 +15,26 @@ const SALE_DESTINATIONS: LotDestination[] = ['MARKETPLACE', 'DISCOUNT_MARKETPLAC
 
 export function DestinationChooser({ harvestLot }: { harvestLot: HarvestLot }) {
   const grade = harvestLot.classification!.grade;
-  const [destination, setDestination] = useState<LotDestination>(harvestLot.destination ?? ALLOWED_DESTINATIONS[grade][0]);
+  const [destination, setDestination] = useState<LotDestination>(
+    harvestLot.destination ?? ALLOWED_DESTINATIONS[grade][0],
+  );
   const [pricePerBox, setPricePerBox] = useState<number | null>(harvestLot.suggestedPricePerBox);
   const confirmLotDestination = useConfirmLotDestination();
   const isSale = SALE_DESTINATIONS.includes(destination);
 
   return (
     <div className="flex flex-col gap-3">
-      <Radio.Group value={destination} onChange={(event) => setDestination(event.target.value)} className="flex! flex-col! gap-1">
+      <Radio.Group
+        value={destination}
+        onChange={(event) => setDestination(event.target.value)}
+        className="flex! flex-col! gap-1"
+      >
         {ALLOWED_DESTINATIONS[grade].map((option) => (
           <Radio key={option} value={option}>
             {lotDestinationLabels[option]}
-            {option === harvestLot.destination && <span className="text-green-dark text-sm"> · sugerido</span>}
+            {option === harvestLot.destination && (
+              <span className="text-green-dark text-sm"> · sugerido</span>
+            )}
           </Radio>
         ))}
       </Radio.Group>
@@ -40,7 +48,9 @@ export function DestinationChooser({ harvestLot }: { harvestLot: HarvestLot }) {
           className="max-w-60"
         />
       )}
-      {confirmLotDestination.error && <Alert type="error" showIcon message={confirmLotDestination.error.message} />}
+      {confirmLotDestination.error && (
+        <Alert type="error" showIcon message={confirmLotDestination.error.message} />
+      )}
       <Button
         type="primary"
         loading={confirmLotDestination.isPending}

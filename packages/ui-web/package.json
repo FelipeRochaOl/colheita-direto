@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@colheita/contracts": "workspace:*",
-    "@colheita/design-tokens": "workspace:*"
+    "@colheita/design-tokens": "workspace:*",
+    "countup.js": "2.10.1"
   },
   "peerDependencies": {
     "antd": "^5.0.0",
@@ -30,11 +31,11 @@
   "devDependencies": {
     "@colheita/config": "workspace:*",
     "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "antd": "^5.29.3",
     "react": "^18.3.1",
-    "tsup": "^8.5.0",
-    "typescript": "~5.9.3",
     "react-dom": "^18.3.1",
-    "@types/react-dom": "^18.3.1"
+    "tsup": "^8.5.0",
+    "typescript": "~5.9.3"
   }
 }

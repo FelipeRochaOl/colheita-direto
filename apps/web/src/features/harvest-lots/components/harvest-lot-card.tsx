@@ -1,15 +1,20 @@
 import type { HarvestLot } from '@colheita/contracts';
-import { MoneyText, QualityGradeBadge, describeQualityGrade } from '@colheita/ui-web';
+import { MoneyText, PercentText, QualityGradeBadge, describeQualityGrade } from '@colheita/ui-web';
 import { Card, Spin, Tag } from 'antd';
 import { capitalize, harvestLotStatusLabels, lotDestinationLabels } from '../../../utils/labels';
 import { DestinationChooser } from './destination-chooser';
 
 export function HarvestLotCard({ harvestLot }: { harvestLot: HarvestLot }) {
-  const isAwaitingDecision = harvestLot.status === 'CLASSIFIED' || harvestLot.status === 'NEEDS_REVIEW';
+  const isAwaitingDecision =
+    harvestLot.status === 'CLASSIFIED' || harvestLot.status === 'NEEDS_REVIEW';
   return (
     <Card>
       <div className="flex gap-4">
-        <img src={harvestLot.photoUrls[0]} alt={`Foto do lote de ${harvestLot.crop}`} className="w-28 h-28 object-cover rounded-sm" />
+        <img
+          src={harvestLot.photoUrls[0]}
+          alt={`Foto do lote de ${harvestLot.crop}`}
+          className="w-28 h-28 object-cover rounded-sm"
+        />
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <span className="text-lg font-semibold">
@@ -27,8 +32,10 @@ export function HarvestLotCard({ harvestLot }: { harvestLot: HarvestLot }) {
           {harvestLot.classification && (
             <div className="text-sm mt-2">
               {describeQualityGrade(harvestLot.classification.grade)} · confiança{' '}
-              {Math.round(harvestLot.classification.confidence * 100)}%
-              {harvestLot.classification.defects.length > 0 && <> · {harvestLot.classification.defects.join(', ')}</>}
+              <PercentText percent={harvestLot.classification.confidence * 100} />
+              {harvestLot.classification.defects.length > 0 && (
+                <> · {harvestLot.classification.defects.join(', ')}</>
+              )}
             </div>
           )}
           {harvestLot.suggestedPricePerBox && (

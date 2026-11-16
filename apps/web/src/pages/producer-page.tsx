@@ -17,8 +17,12 @@ function HarvestLotsTab() {
       </Card>
       <div className="lg:col-span-3 flex flex-col gap-4">
         {isLoading && <Skeleton active />}
-        {harvestLots && !harvestLots.length && <Empty description="Fotografe sua primeira colheita" />}
-        {harvestLots?.map((harvestLot) => <HarvestLotCard key={harvestLot.id} harvestLot={harvestLot} />)}
+        {harvestLots && !harvestLots.length && (
+          <Empty description="Fotografe sua primeira colheita" />
+        )}
+        {harvestLots?.map((harvestLot) => (
+          <HarvestLotCard key={harvestLot.id} harvestLot={harvestLot} />
+        ))}
       </div>
     </div>
   );
@@ -51,7 +55,9 @@ export function ProducerPage() {
             label: 'Gestão',
             children: (
               <div className="flex flex-col gap-6">
-                <Card title="Anotar despesa"><ExpenseForm /></Card>
+                <Card title="Anotar despesa">
+                  <ExpenseForm />
+                </Card>
                 <FarmSummaryPanel />
               </div>
             ),

@@ -1,5 +1,11 @@
 import { useOffer } from '@colheita/api-client';
-import { MoneyText, PageSection, QualityGradeBadge, describeQualityGrade } from '@colheita/ui-web';
+import {
+  MoneyText,
+  PageSection,
+  QualityGradeBadge,
+  describeQualityGrade,
+  WeightText,
+} from '@colheita/ui-web';
 import { Alert, Button, Image, InputNumber, message, Skeleton } from 'antd';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
@@ -13,8 +19,18 @@ export function OfferPage() {
   const { addItem } = useCart();
   const navigate = useNavigate();
 
-  if (isLoading) return <PageSection><Skeleton active /></PageSection>;
-  if (error || !offer) return <PageSection><Alert type="error" message={error?.message ?? 'Oferta não encontrada'} /></PageSection>;
+  if (isLoading)
+    return (
+      <PageSection>
+        <Skeleton active />
+      </PageSection>
+    );
+  if (error || !offer)
+    return (
+      <PageSection>
+        <Alert type="error" message={error?.message ?? 'Oferta não encontrada'} />
+      </PageSection>
+    );
 
   return (
     <PageSection>
@@ -22,7 +38,12 @@ export function OfferPage() {
         <Image.PreviewGroup>
           <div className="grid grid-cols-2 gap-2">
             {offer.photoUrls.map((photoUrl, index) => (
-              <Image key={photoUrl} src={photoUrl} alt={`Foto ${index + 1} do lote`} className="object-cover rounded-sm" />
+              <Image
+                key={photoUrl}
+                src={photoUrl}
+                alt={`Foto ${index + 1} do lote`}
+                className="object-cover rounded-sm"
+              />
             ))}
           </div>
         </Image.PreviewGroup>
@@ -38,11 +59,20 @@ export function OfferPage() {
             Produzido por <strong>{offer.producerName}</strong> em {offer.city}/{offer.state}
           </p>
           <p className="text-2xl mt-4">
-            <MoneyText value={offer.pricePerBox} strong /> <span className="text-base">por caixa de {offer.boxWeightKg} kg</span>
+            <MoneyText value={offer.pricePerBox} strong />{' '}
+            <span className="text-base">
+              por caixa de <WeightText kilograms={offer.boxWeightKg} />
+            </span>
           </p>
           <p className="text-sm text-border-active">{offer.availableBoxes} caixas disponíveis</p>
           <div className="flex gap-3 mt-6">
-            <InputNumber size="large" min={1} max={offer.availableBoxes} value={boxes} onChange={(value) => setBoxes(value ?? 1)} />
+            <InputNumber
+              size="large"
+              min={1}
+              max={offer.availableBoxes}
+              value={boxes}
+              onChange={(value) => setBoxes(value ?? 1)}
+            />
             <Button
               type="primary"
               size="large"

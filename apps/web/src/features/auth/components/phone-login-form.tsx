@@ -1,7 +1,12 @@
 import { useRequestOtp, useVerifyOtp } from '@colheita/api-client';
 import { Alert, Button, Form, Input } from 'antd';
 import { useState } from 'react';
-import { toInternationalPhoneNumber } from '../../../utils/phone-number';
+import {
+  formatInternationalPhoneNumber,
+  isCompleteBrazilianPhoneNumber,
+  maskBrazilianPhoneNumber,
+  toInternationalPhoneNumber,
+} from '@colheita/contracts';
 
 /** Login sem senha: telefone → código de 6 dígitos (WhatsApp, ou SMS como alternativa). */
 export function PhoneLoginForm({ onLoggedIn }: { onLoggedIn: () => void }) {
@@ -11,7 +16,9 @@ export function PhoneLoginForm({ onLoggedIn }: { onLoggedIn: () => void }) {
 
   const handleRequestCode = ({ phone }: { phone: string }) => {
     const internationalNumber = toInternationalPhoneNumber(phone);
-    requestOtp.mutate(internationalNumber, { onSuccess: () => setPhoneNumber(internationalNumber) });
+    requestOtp.mutate(internationalNumber, {
+      onSuccess: () => setPhoneNumber(internationalNumber),
+    });
   };
 
   const handleVerifyCode = ({ code }: { code: string }) => {
@@ -28,18 +35,45 @@ export function PhoneLoginForm({ onLoggedIn }: { onLoggedIn: () => void }) {
           <Form.Item
             name="phone"
             label="Celular com DDD"
-            rules={[{ required: true, pattern: /^\(?\d{2}\)?\s?9?\d{4}-?\d{4}$/, message: 'Informe o celular com DDD' }]}
+            normalize={maskBrazilianPhoneNumber}
+            rules={[
+              { required: true, message: 'Informe o celular com DDD' },
+              {
+                validator: (_, value: string | undefined) =>
+                  !value || isCompleteBrazilianPhoneNumber(value)
+                    ? Promise.resolve()
+                    : Promise.reject(new Error('Número incompleto: DDD + 8 ou 9 dígitos')),
+              },
+            ]}
           >
-            <Input size="large" inputMode="tel" placeholder="(11) 91234-5678" autoComplete="tel-national" />
+            <Input
+              size="large"
+              inputMode="tel"
+              placeholder="(11) 91234-5678"
+              autoComplete="tel-national"
+              maxLength={15}
+            />
           </Form.Item>
-          <Button type="primary" htmlType="submit" size="large" block loading={requestOtp.isPending}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            block
+            loading={requestOtp.isPending}
+          >
             Receber código no WhatsApp
           </Button>
         </Form>
       ) : (
         <Form layout="vertical" onFinish={handleVerifyCode} requiredMark={false}>
-          <p className="mb-4 text-sm">Enviamos um código para {phoneNumber}.</p>
-          <Form.Item name="code" label="Código" rules={[{ required: true, len: 6, message: 'O código tem 6 dígitos' }]}>
+          <p className="mb-4 text-sm">
+            Enviamos um código para {formatInternationalPhoneNumber(phoneNumber)}.
+          </p>
+          <Form.Item
+            name="code"
+            label="Código"
+            rules={[{ required: true, len: 6, message: 'O código tem 6 dígitos' }]}
+          >
             <Input.OTP size="large" length={6} />
           </Form.Item>
           <Button type="primary" htmlType="submit" size="large" block loading={verifyOtp.isPending}>

@@ -1,5 +1,13 @@
 import type { Offer } from '@colheita/contracts';
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 const CART_STORAGE_KEY = 'colheita-direta:cart';
 
@@ -45,13 +53,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const existing = current.find((item) => item.offer.id === offer.id);
       if (!existing) return [...current, { offer, boxes }];
       return current.map((item) =>
-        item.offer.id === offer.id ? { ...item, boxes: Math.min(item.boxes + boxes, offer.availableBoxes) } : item,
+        item.offer.id === offer.id
+          ? { ...item, boxes: Math.min(item.boxes + boxes, offer.availableBoxes) }
+          : item,
       );
     });
   }, []);
 
   const updateBoxes = useCallback((offerId: string, boxes: number) => {
-    setItems((current) => current.map((item) => (item.offer.id === offerId ? { ...item, boxes } : item)));
+    setItems((current) =>
+      current.map((item) => (item.offer.id === offerId ? { ...item, boxes } : item)),
+    );
   }, []);
 
   const removeItem = useCallback((offerId: string) => {

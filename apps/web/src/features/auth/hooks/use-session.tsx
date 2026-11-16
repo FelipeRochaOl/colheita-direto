@@ -17,19 +17,27 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const reloadSession = () => browserSessionStorage.load().then((stored) => {
-      setSession(stored);
-      setIsLoading(false);
-    });
+    const reloadSession = () =>
+      browserSessionStorage.load().then((stored) => {
+        setSession(stored);
+        setIsLoading(false);
+      });
     void reloadSession();
     window.addEventListener('colheita-session-changed', reloadSession);
     return () => window.removeEventListener('colheita-session-changed', reloadSession);
   }, []);
 
-  const hasRole = useCallback((role: UserRole) => Boolean(session?.user.roles.includes(role)), [session]);
+  const hasRole = useCallback(
+    (role: UserRole) => Boolean(session?.user.roles.includes(role)),
+    [session],
+  );
   const logout = useCallback(() => apiClient.logout(), []);
 
-  return <SessionContext.Provider value={{ session, isLoading, hasRole, logout }}>{children}</SessionContext.Provider>;
+  return (
+    <SessionContext.Provider value={{ session, isLoading, hasRole, logout }}>
+      {children}
+    </SessionContext.Provider>
+  );
 }
 
 export function useSession(): SessionContextValue {

@@ -30,26 +30,62 @@ export function ServiceProviderSignupForm({ onRegistered }: { onRegistered: () =
       requiredMark={false}
       initialValues={{ serviceRadiusKm: 50, hasRefrigeration: false }}
       onFinish={(values) =>
-        registerServiceProvider.mutate({ ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION }, { onSuccess: onRegistered })
+        registerServiceProvider.mutate(
+          { ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION },
+          { onSuccess: onRegistered },
+        )
       }
     >
-      {registerServiceProvider.error && <Alert type="error" showIcon message={registerServiceProvider.error.message} className="mb-4!" />}
-      <Form.Item name="name" label="Nome ou empresa" rules={[{ required: true }]}><Input size="large" /></Form.Item>
-      <Form.Item name="document" label="CPF ou CNPJ" rules={[{ required: true, min: 11 }]}><Input size="large" /></Form.Item>
+      {registerServiceProvider.error && (
+        <Alert
+          type="error"
+          showIcon
+          message={registerServiceProvider.error.message}
+          className="mb-4!"
+        />
+      )}
+      <Form.Item name="name" label="Nome ou empresa" rules={[{ required: true }]}>
+        <Input size="large" />
+      </Form.Item>
+      <Form.Item name="document" label="CPF ou CNPJ" rules={[{ required: true, min: 11 }]}>
+        <Input size="large" />
+      </Form.Item>
       <Form.Item name="serviceTypes" label="Serviços que oferece" rules={[{ required: true }]}>
         <Checkbox.Group options={SERVICE_OPTIONS} className="flex! flex-col! gap-1" />
       </Form.Item>
-      <Form.Item name="baseLocation" label="Base de operação" rules={[{ required: true, message: 'Marque a localização' }]}>
+      <Form.Item
+        name="baseLocation"
+        label="Base de operação"
+        rules={[{ required: true, message: 'Marque a localização' }]}
+      >
         <LocationField label="Usar minha localização" />
       </Form.Item>
       <div className="grid grid-cols-2 gap-4">
-        <Form.Item name="serviceRadiusKm" label="Raio de atendimento (km)"><InputNumber min={5} max={500} className="w-full!" /></Form.Item>
-        <Form.Item name="vehicleCapacityKg" label="Capacidade do veículo (kg)"><InputNumber min={100} className="w-full!" /></Form.Item>
+        <Form.Item name="serviceRadiusKm" label="Raio de atendimento (km)">
+          <InputNumber min={5} max={500} className="w-full!" />
+        </Form.Item>
+        <Form.Item name="vehicleCapacityKg" label="Capacidade do veículo (kg)">
+          <InputNumber min={100} className="w-full!" />
+        </Form.Item>
       </div>
-      <Form.Item name="hasRefrigeration" label="Tem refrigeração" valuePropName="checked"><Switch /></Form.Item>
+      <Form.Item name="hasRefrigeration" label="Tem refrigeração" valuePropName="checked">
+        <Switch />
+      </Form.Item>
       <PrivacyConsentField />
-      <Alert type="info" showIcon className="mb-4!" message="Depois do cadastro conferimos seus documentos antes de liberar pedidos." />
-      <Button type="primary" htmlType="submit" size="large" loading={registerServiceProvider.isPending}>Criar perfil de prestador</Button>
+      <Alert
+        type="info"
+        showIcon
+        className="mb-4!"
+        message="Depois do cadastro conferimos seus documentos antes de liberar pedidos."
+      />
+      <Button
+        type="primary"
+        htmlType="submit"
+        size="large"
+        loading={registerServiceProvider.isPending}
+      >
+        Criar perfil de prestador
+      </Button>
     </Form>
   );
 }

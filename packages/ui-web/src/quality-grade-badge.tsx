@@ -10,7 +10,13 @@ const GRADE_DESCRIPTIONS: Record<QualityGrade, string> = {
 };
 
 /** Selo da classe de qualidade (A–D) definida pela visão computacional. */
-export function QualityGradeBadge({ grade, size = 'medium' }: { grade: QualityGrade; size?: 'medium' | 'large' }) {
+export function QualityGradeBadge({
+  grade,
+  size = 'medium',
+}: {
+  grade: QualityGrade;
+  size?: 'medium' | 'large';
+}) {
   const dimension = size === 'large' ? 48 : 32;
   return (
     <Tooltip title={GRADE_DESCRIPTIONS[grade]}>

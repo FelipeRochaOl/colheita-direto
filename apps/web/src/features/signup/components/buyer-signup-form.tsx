@@ -28,19 +28,38 @@ export function BuyerSignupForm({ onRegistered }: { onRegistered: () => void }) 
       requiredMark={false}
       initialValues={{ buyerType: 'CONSUMER' }}
       onFinish={(values) =>
-        registerBuyer.mutate({ ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION }, { onSuccess: onRegistered })
+        registerBuyer.mutate(
+          { ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION },
+          { onSuccess: onRegistered },
+        )
       }
     >
-      {registerBuyer.error && <Alert type="error" showIcon message={registerBuyer.error.message} className="mb-4!" />}
-      <Form.Item name="buyerType" label="Você compra como"><Select size="large" options={BUYER_TYPE_OPTIONS} /></Form.Item>
-      <Form.Item name="name" label="Nome ou razão social" rules={[{ required: true }]}><Input size="large" /></Form.Item>
-      <Form.Item name="document" label="CPF ou CNPJ" rules={[{ required: true, min: 11 }]}><Input size="large" inputMode="numeric" /></Form.Item>
-      <Form.Item name="deliveryAddress" label="Endereço de entrega" rules={[{ required: true }]}><Input size="large" /></Form.Item>
-      <Form.Item name="deliveryLocation" label="Ponto de entrega" rules={[{ required: true, message: 'Marque a localização' }]}>
+      {registerBuyer.error && (
+        <Alert type="error" showIcon message={registerBuyer.error.message} className="mb-4!" />
+      )}
+      <Form.Item name="buyerType" label="Você compra como">
+        <Select size="large" options={BUYER_TYPE_OPTIONS} />
+      </Form.Item>
+      <Form.Item name="name" label="Nome ou razão social" rules={[{ required: true }]}>
+        <Input size="large" />
+      </Form.Item>
+      <Form.Item name="document" label="CPF ou CNPJ" rules={[{ required: true, min: 11 }]}>
+        <Input size="large" inputMode="numeric" />
+      </Form.Item>
+      <Form.Item name="deliveryAddress" label="Endereço de entrega" rules={[{ required: true }]}>
+        <Input size="large" />
+      </Form.Item>
+      <Form.Item
+        name="deliveryLocation"
+        label="Ponto de entrega"
+        rules={[{ required: true, message: 'Marque a localização' }]}
+      >
         <LocationField label="Usar minha localização" />
       </Form.Item>
       <PrivacyConsentField />
-      <Button type="primary" htmlType="submit" size="large" loading={registerBuyer.isPending}>Criar perfil de comprador</Button>
+      <Button type="primary" htmlType="submit" size="large" loading={registerBuyer.isPending}>
+        Criar perfil de comprador
+      </Button>
     </Form>
   );
 }

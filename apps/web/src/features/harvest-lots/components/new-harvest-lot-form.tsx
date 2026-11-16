@@ -36,8 +36,16 @@ export function NewHarvestLotForm({ onCreated }: { onCreated: () => void }) {
   };
 
   return (
-    <Form form={form} layout="vertical" onFinish={handleSubmit} requiredMark={false} initialValues={{ boxWeightKg: 20 }}>
-      {createHarvestLot.error && <Alert type="error" showIcon message={createHarvestLot.error.message} className="mb-4!" />}
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleSubmit}
+      requiredMark={false}
+      initialValues={{ boxWeightKg: 20 }}
+    >
+      {createHarvestLot.error && (
+        <Alert type="error" showIcon message={createHarvestLot.error.message} className="mb-4!" />
+      )}
       <Form.Item label="Fotos do lote (de 1 a 5)" required>
         <Upload
           listType="picture-card"
@@ -56,17 +64,31 @@ export function NewHarvestLotForm({ onCreated }: { onCreated: () => void }) {
         </Upload>
       </Form.Item>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4">
-        <Form.Item name="crop" label="Produto" rules={[{ required: true, message: 'Qual produto?' }]}>
+        <Form.Item
+          name="crop"
+          label="Produto"
+          rules={[{ required: true, message: 'Qual produto?' }]}
+        >
           <Input placeholder="tomate" size="large" />
         </Form.Item>
-        <Form.Item name="quantityBoxes" label="Caixas" rules={[{ required: true, message: 'Quantas caixas?' }]}>
+        <Form.Item
+          name="quantityBoxes"
+          label="Caixas"
+          rules={[{ required: true, message: 'Quantas caixas?' }]}
+        >
           <InputNumber min={1} size="large" className="w-full!" />
         </Form.Item>
         <Form.Item name="boxWeightKg" label="Peso da caixa (kg)" rules={[{ required: true }]}>
           <InputNumber min={0.5} step={0.5} size="large" className="w-full!" />
         </Form.Item>
       </div>
-      <Button type="primary" htmlType="submit" size="large" loading={createHarvestLot.isPending} disabled={!photoFiles.length}>
+      <Button
+        type="primary"
+        htmlType="submit"
+        size="large"
+        loading={createHarvestLot.isPending}
+        disabled={!photoFiles.length}
+      >
         Classificar colheita
       </Button>
     </Form>

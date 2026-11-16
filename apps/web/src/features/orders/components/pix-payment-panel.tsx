@@ -8,7 +8,11 @@ export function PixPaymentPanel({ order }: { order: Order }) {
   return (
     <div className="flex flex-col sm:flex-row gap-6 items-start">
       {order.payment.pixQrCodeImage && (
-        <img src={order.payment.pixQrCodeImage} alt="QR code Pix" className="w-48 h-48 border border-border-subtle rounded-sm" />
+        <img
+          src={order.payment.pixQrCodeImage}
+          alt="QR code Pix"
+          className="w-48 h-48 border border-border-subtle rounded-sm"
+        />
       )}
       <div className="flex-1 min-w-0">
         <p className="mb-2">
@@ -25,7 +29,12 @@ export function PixPaymentPanel({ order }: { order: Order }) {
             />
           </>
         )}
-        <Alert className="mt-4!" type="info" showIcon message="Assim que o Pix for pago, o produtor é avisado no WhatsApp." />
+        <Alert
+          className="mt-4!"
+          type="info"
+          showIcon
+          message="Assim que o Pix for pago, o produtor é avisado no WhatsApp."
+        />
       </div>
     </div>
   );

@@ -16,9 +16,16 @@
   --color-border-subtle: #3D4F58;
   --color-warning: #FFA500;
   --color-danger: #DB3030;
+  --color-mint: #E3FCF7;
+  --color-mint-strong: #C0FAE6;
+  --color-produce-red: #E5484D;
+  --color-produce-red-light: #FF8B7E;
+  --color-produce-red-dark: #A8222A;
+  --color-crate-wood: #C98A4E;
+  --color-crate-wood-dark: #8F5A2B;
 
-  --font-sans: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-sans: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
   --font-mono: 'Source Code Pro', Menlo, monospace;
 
   --radius-sm: 8px;

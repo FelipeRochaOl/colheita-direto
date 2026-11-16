@@ -10,7 +10,8 @@ export function RequireRole({ role, children }: { role: UserRole; children: Reac
   const location = useLocation();
 
   if (isLoading) return <Spin className="block! mx-auto! mt-16!" />;
-  if (!session) return <Navigate to={`/entrar?voltar=${encodeURIComponent(location.pathname)}`} replace />;
+  if (!session)
+    return <Navigate to={`/entrar?voltar=${encodeURIComponent(location.pathname)}`} replace />;
   if (!hasRole(role)) return <Navigate to={`/cadastro?perfil=${role}`} replace />;
   return <>{children}</>;
 }

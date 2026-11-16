@@ -1,16 +1,17 @@
 import { RegisterExpenseInput, useRegisterExpense } from '@colheita/api-client';
 import { Button, Form, Input, InputNumber, Select } from 'antd';
 
-const EXPENSE_CATEGORY_OPTIONS: Array<{ label: string; value: RegisterExpenseInput['category'] }> = [
-  { label: 'Sementes e mudas', value: 'SEEDS' },
-  { label: 'Adubo', value: 'FERTILIZER' },
-  { label: 'Defensivos', value: 'PESTICIDE' },
-  { label: 'Mão de obra', value: 'LABOR' },
-  { label: 'Combustível', value: 'FUEL' },
-  { label: 'Embalagens', value: 'PACKAGING' },
-  { label: 'Equipamentos', value: 'EQUIPMENT' },
-  { label: 'Outros', value: 'OTHER' },
-];
+const EXPENSE_CATEGORY_OPTIONS: Array<{ label: string; value: RegisterExpenseInput['category'] }> =
+  [
+    { label: 'Sementes e mudas', value: 'SEEDS' },
+    { label: 'Adubo', value: 'FERTILIZER' },
+    { label: 'Defensivos', value: 'PESTICIDE' },
+    { label: 'Mão de obra', value: 'LABOR' },
+    { label: 'Combustível', value: 'FUEL' },
+    { label: 'Embalagens', value: 'PACKAGING' },
+    { label: 'Equipamentos', value: 'EQUIPMENT' },
+    { label: 'Outros', value: 'OTHER' },
+  ];
 
 export function ExpenseForm() {
   const [form] = Form.useForm<RegisterExpenseInput>();

@@ -8,10 +8,18 @@ export function PrivacyConsentField() {
     <Form.Item
       name="acceptedPrivacy"
       valuePropName="checked"
-      rules={[{ validator: (_, accepted) => (accepted ? Promise.resolve() : Promise.reject(new Error('É preciso aceitar para continuar'))) }]}
+      rules={[
+        {
+          validator: (_, accepted) =>
+            accepted
+              ? Promise.resolve()
+              : Promise.reject(new Error('É preciso aceitar para continuar')),
+        },
+      ]}
     >
       <Checkbox>
-        Li e aceito os termos de uso e a política de privacidade. Meus dados são usados só para vendas, entregas e doações.
+        Li e aceito os termos de uso e a política de privacidade. Meus dados são usados só para
+        vendas, entregas e doações.
       </Checkbox>
     </Form.Item>
   );

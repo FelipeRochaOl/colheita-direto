@@ -21,27 +21,49 @@ export function ProducerSignupForm({ onRegistered }: { onRegistered: () => void 
       layout="vertical"
       requiredMark={false}
       onFinish={(values) =>
-        registerProducer.mutate({ ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION }, { onSuccess: onRegistered })
+        registerProducer.mutate(
+          { ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION },
+          { onSuccess: onRegistered },
+        )
       }
     >
-      {registerProducer.error && <Alert type="error" showIcon message={registerProducer.error.message} className="mb-4!" />}
-      <Form.Item name="name" label="Seu nome" rules={[{ required: true }]}><Input size="large" /></Form.Item>
-      <Form.Item name="farmName" label="Nome do sítio ou fazenda" rules={[{ required: true }]}><Input size="large" /></Form.Item>
+      {registerProducer.error && (
+        <Alert type="error" showIcon message={registerProducer.error.message} className="mb-4!" />
+      )}
+      <Form.Item name="name" label="Seu nome" rules={[{ required: true }]}>
+        <Input size="large" />
+      </Form.Item>
+      <Form.Item name="farmName" label="Nome do sítio ou fazenda" rules={[{ required: true }]}>
+        <Input size="large" />
+      </Form.Item>
       <div className="grid grid-cols-3 gap-4">
-        <Form.Item name="city" label="Cidade" className="col-span-2" rules={[{ required: true }]}><Input size="large" /></Form.Item>
-        <Form.Item name="state" label="UF" rules={[{ required: true, len: 2 }]}><Input size="large" maxLength={2} /></Form.Item>
+        <Form.Item name="city" label="Cidade" className="col-span-2" rules={[{ required: true }]}>
+          <Input size="large" />
+        </Form.Item>
+        <Form.Item name="state" label="UF" rules={[{ required: true, len: 2 }]}>
+          <Input size="large" maxLength={2} />
+        </Form.Item>
       </div>
-      <Form.Item name="farmLocation" label="Localização da propriedade" rules={[{ required: true, message: 'Use o botão para marcar a localização' }]}>
+      <Form.Item
+        name="farmLocation"
+        label="Localização da propriedade"
+        rules={[{ required: true, message: 'Use o botão para marcar a localização' }]}
+      >
         <LocationField label="Estou na propriedade" />
       </Form.Item>
       <Form.Item name="crops" label="O que você planta" rules={[{ required: true }]}>
         <Select mode="tags" size="large" placeholder="tomate, alface, banana…" />
       </Form.Item>
-      <Form.Item name="familyFarmRegistration" label="CAF (opcional, para vender à merenda escolar)">
+      <Form.Item
+        name="familyFarmRegistration"
+        label="CAF (opcional, para vender à merenda escolar)"
+      >
         <Input size="large" />
       </Form.Item>
       <PrivacyConsentField />
-      <Button type="primary" htmlType="submit" size="large" loading={registerProducer.isPending}>Criar perfil de produtor</Button>
+      <Button type="primary" htmlType="submit" size="large" loading={registerProducer.isPending}>
+        Criar perfil de produtor
+      </Button>
     </Form>
   );
 }

@@ -5,7 +5,15 @@ import { useEffect } from 'react';
 import { useCurrentLocation } from '../hooks/use-current-location';
 
 /** Campo de formulário (antd) que guarda a localização do navegador. */
-export function LocationField({ value, onChange, label }: { value?: GeoPoint; onChange?: (location: GeoPoint) => void; label: string }) {
+export function LocationField({
+  value,
+  onChange,
+  label,
+}: {
+  value?: GeoPoint;
+  onChange?: (location: GeoPoint) => void;
+  label: string;
+}) {
   const { location, errorMessage, isLocating, requestLocation } = useCurrentLocation();
 
   useEffect(() => {

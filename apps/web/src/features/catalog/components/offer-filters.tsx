@@ -20,7 +20,8 @@ export function OfferFilters({
   const { location, isLocating, errorMessage, requestLocation } = useCurrentLocation();
 
   useEffect(() => {
-    if (location) onChange({ ...filters, ...location, maxDistanceKm: filters.maxDistanceKm ?? 100 });
+    if (location)
+      onChange({ ...filters, ...location, maxDistanceKm: filters.maxDistanceKm ?? 100 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
@@ -54,7 +55,9 @@ export function OfferFilters({
         className="w-44!"
         min={1}
         value={filters.maxPricePerBox}
-        onChange={(maxPricePerBox) => onChange({ ...filters, maxPricePerBox: maxPricePerBox ?? undefined })}
+        onChange={(maxPricePerBox) =>
+          onChange({ ...filters, maxPricePerBox: maxPricePerBox ?? undefined })
+        }
       />
       {errorMessage && <span className="text-danger text-sm">{errorMessage}</span>}
     </div>

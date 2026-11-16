@@ -1,20 +1,30 @@
 import { useAcceptDonation, useConfirmDonationReceipt, useDonations } from '@colheita/api-client';
 import type { Donation } from '@colheita/contracts';
+import { WeightText } from '@colheita/ui-web';
 import { Alert, Button, Card, Empty, InputNumber, Skeleton, Tag } from 'antd';
 import { useState } from 'react';
 import { capitalize, donationStatusLabels } from '../../../utils/labels';
 
 function ReceiptConfirmation({ donation }: { donation: Donation }) {
-  const [receivedWeightKg, setReceivedWeightKg] = useState<number | null>(Math.round(donation.estimatedWeightKg));
+  const [receivedWeightKg, setReceivedWeightKg] = useState<number | null>(
+    Math.round(donation.estimatedWeightKg),
+  );
   const confirmReceipt = useConfirmDonationReceipt();
   return (
     <div className="flex gap-2 items-center flex-wrap">
-      <InputNumber addonAfter="kg recebidos" min={1} value={receivedWeightKg} onChange={setReceivedWeightKg} />
+      <InputNumber
+        addonAfter="kg recebidos"
+        min={1}
+        value={receivedWeightKg}
+        onChange={setReceivedWeightKg}
+      />
       <Button
         type="primary"
         loading={confirmReceipt.isPending}
         disabled={!receivedWeightKg}
-        onClick={() => confirmReceipt.mutate({ donationId: donation.id, receivedWeightKg: receivedWeightKg! })}
+        onClick={() =>
+          confirmReceipt.mutate({ donationId: donation.id, receivedWeightKg: receivedWeightKg! })
+        }
       >
         Confirmar recebimento
       </Button>
@@ -28,7 +38,8 @@ function DonationCard({ donation, action }: { donation: Donation; action?: React
       <div className="flex justify-between gap-3 flex-wrap">
         <div>
           <div className="font-semibold">
-            {donation.quantityBoxes} cx de {capitalize(donation.crop)} (~{Math.round(donation.estimatedWeightKg)} kg)
+            {donation.quantityBoxes} cx de {capitalize(donation.crop)} (~
+            <WeightText kilograms={donation.estimatedWeightKg} />)
           </div>
           <div className="text-sm">Produtor: {donation.producerName}</div>
         </div>
@@ -57,7 +68,11 @@ export function DonationBoard() {
                 key={donation.id}
                 donation={donation}
                 action={
-                  <Button type="primary" loading={acceptDonation.isPending} onClick={() => acceptDonation.mutate(donation.id)}>
+                  <Button
+                    type="primary"
+                    loading={acceptDonation.isPending}
+                    onClick={() => acceptDonation.mutate(donation.id)}
+                  >
                     Aceitar e combinar retirada
                   </Button>
                 }
@@ -76,7 +91,11 @@ export function DonationBoard() {
               <DonationCard
                 key={donation.id}
                 donation={donation}
-                action={donation.status === 'ACCEPTED' ? <ReceiptConfirmation donation={donation} /> : undefined}
+                action={
+                  donation.status === 'ACCEPTED' ? (
+                    <ReceiptConfirmation donation={donation} />
+                  ) : undefined
+                }
               />
             ))}
           </div>

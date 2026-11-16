@@ -1,5 +1,5 @@
 import { useFarmSummary } from '@colheita/api-client';
-import { formatMoney } from '@colheita/ui-web';
+import { MoneyText } from '@colheita/ui-web';
 import { Card, Skeleton, Statistic, Table } from 'antd';
 import { capitalize } from '../../../utils/labels';
 
@@ -10,13 +10,28 @@ export function FarmSummaryPanel() {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card><Statistic title={`Receitas (${summary.periodDays} dias)`} value={formatMoney(summary.revenue)} /></Card>
-        <Card><Statistic title="Despesas" value={formatMoney(summary.expenses)} /></Card>
+        <Card>
+          <Statistic
+            title={`Receitas (${summary.periodDays} dias)`}
+            value={summary.revenue}
+            formatter={(value) => <MoneyText value={Number(value)} />}
+          />
+        </Card>
+        <Card>
+          <Statistic
+            title="Despesas"
+            value={summary.expenses}
+            formatter={(value) => <MoneyText value={Number(value)} />}
+          />
+        </Card>
         <Card>
           <Statistic
             title="Lucro"
-            value={formatMoney(summary.profit)}
-            valueStyle={{ color: summary.profit >= 0 ? 'var(--color-green-dark)' : 'var(--color-danger)' }}
+            value={summary.profit}
+            formatter={(value) => <MoneyText value={Number(value)} />}
+            valueStyle={{
+              color: summary.profit >= 0 ? 'var(--color-green-dark)' : 'var(--color-danger)',
+            }}
           />
         </Card>
       </div>
