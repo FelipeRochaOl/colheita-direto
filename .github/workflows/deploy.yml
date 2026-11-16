@@ -1,0 +1,68 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write # OIDC: sem chaves AWS guardadas no GitHub
+  contents: read
+
+env:
+  AWS_REGION: sa-east-1
+  ENVIRONMENT: dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Imagens da API e do serviço de visão
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          TAG: ${{ github.sha }}
+        run: |
+          docker build -f apps/api/Dockerfile -t $REGISTRY/colheita-$ENVIRONMENT/api:$TAG .
+          docker build -t $REGISTRY/colheita-$ENVIRONMENT/vision:$TAG services/vision
+          docker push $REGISTRY/colheita-$ENVIRONMENT/api:$TAG
+          docker push $REGISTRY/colheita-$ENVIRONMENT/vision:$TAG
+
+      - name: Atualiza os serviços ECS (api-http, api-worker, vision)
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          TAG: ${{ github.sha }}
+        run: |
+          for service in api-http:api api-worker:api vision:vision; do
+            name=${service%%:*}; repository=${service##*:}
+            family=colheita-$ENVIRONMENT-$name
+            aws ecs describe-task-definition --task-definition $family --query taskDefinition > task.json
+            jq --arg image "$REGISTRY/colheita-$ENVIRONMENT/$repository:$TAG" \
+              '.containerDefinitions[0].image = $image | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' \
+              task.json > task-new.json
+            revision=$(aws ecs register-task-definition --cli-input-json file://task-new.json --query taskDefinition.taskDefinitionArn --output text)
+            aws ecs update-service --cluster colheita-$ENVIRONMENT --service $name --task-definition $revision >/dev/null
+          done
+          aws ecs wait services-stable --cluster colheita-$ENVIRONMENT --services api-http api-worker vision
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Site (Vite → S3 + CloudFront)
+        env:
+          VITE_API_URL: ${{ vars.API_URL }}
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm turbo build --filter=@colheita/web...
+          aws s3 sync apps/web/dist s3://${{ vars.WEB_BUCKET_NAME }} --delete
+          aws cloudfront create-invalidation --distribution-id ${{ vars.WEB_DISTRIBUTION_ID }} --paths "/*"

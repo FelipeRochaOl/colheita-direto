@@ -1,0 +1,9 @@
+output "api_url" { value = "https://${module.load_balancer.api_https_domain_name}" }
+output "web_url" { value = "https://${module.web_site.cloudfront_domain_name}" }
+output "web_bucket_name" { value = module.web_site.bucket_name }
+output "ecr_repository_urls" { value = module.container_registry.repository_urls }
+output "github_deploy_role_arn" { value = try(module.github_deploy_role[0].role_arn, null) }
+output "nat_public_ip" { value = module.network.nat_public_ip }
+output "ecs_cluster_name" { value = aws_ecs_cluster.main.name }
+output "web_distribution_id" { value = module.web_site.cloudfront_distribution_id }
+output "web_app_url" { value = local.web_app_url }

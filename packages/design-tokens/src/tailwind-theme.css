@@ -1,0 +1,28 @@
+/* Tema Tailwind v4 (web). Valores espelham src/colors.ts — manter sincronizado. */
+@theme {
+  --color-evergreen: #001E2B;
+  --color-deep-dark: #061621;
+  --color-card-dark: #21313C;
+  --color-teal-dark: #023430;
+  --color-surface: #FAFBFC;
+  --color-brand: #00ED64;
+  --color-green-medium: #00AA57;
+  --color-green-dark: #00684A;
+  --color-link: #006CFA;
+  --color-focus: #0498EC;
+  --color-accent: #B45AF2;
+  --color-muted: #B8C4C2;
+  --color-border-active: #5D6C74;
+  --color-border-subtle: #3D4F58;
+  --color-warning: #FFA500;
+  --color-danger: #DB3030;
+
+  --font-sans: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'Source Code Pro', Menlo, monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 40px;
+}

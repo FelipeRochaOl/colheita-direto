@@ -1,0 +1,21 @@
+[project]
+name = "colheita-vision"
+version = "0.1.0"
+description = "Classificação de qualidade da colheita e diagnóstico de pragas por foto"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "anthropic[bedrock]>=2.8.0",
+  "fastapi>=0.120.0",
+  "httpx>=0.28.0",
+  "pillow>=11.0.0",
+  "pydantic>=2.11.0",
+  "pydantic-settings>=2.10.0",
+  "uvicorn[standard]>=0.35.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.4.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

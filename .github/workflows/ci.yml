@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  typescript:
+    name: Build, tipos e testes (TypeScript)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm turbo build typecheck test --filter=!@colheita/mobile
+      - name: Tipos do app mobile
+        run: pnpm --filter @colheita/mobile typecheck
+
+  vision:
+    name: Testes do serviço de visão (Python)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/vision
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run pytest -q
+
+  terraform:
+    name: Terraform fmt e validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform fmt -check -recursive infra/terraform
+      - name: Validate
+        run: |
+          for environment in dev prod; do
+            (cd infra/terraform/environments/$environment && terraform init -backend=false -input=false && terraform validate)
+          done

@@ -1,0 +1,13 @@
+/* Ordem das camadas: o Ant Design (layer "antd") fica acima do reset do Tailwind (base)
+   e abaixo dos utilitários, para os dois conviverem sem sobrescrever estilos. */
+@layer theme, base, antd, components, utilities;
+
+@import 'tailwindcss';
+@import '@colheita/design-tokens/tailwind-theme.css';
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface);
+  color: var(--color-evergreen);
+  -webkit-font-smoothing: antialiased;
+}

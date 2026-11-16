@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Colheita Direta",
+    "slug": "colheita-direta",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "br.com.colheitadireta.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#001E2B",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "br.com.colheitadireta.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Usamos a câmera para fotografar a colheita e classificar a qualidade.",
+          "photosPermission": "Usamos suas fotos para classificar a colheita."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Usamos a localização da propriedade para encontrar compradores, transportadores e ONGs próximos."
+        }
+      ]
+    ],
+    "scheme": "colheitadireta"
+  }
+}

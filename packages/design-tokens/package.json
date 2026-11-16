@@ -1,0 +1,32 @@
+{
+  "name": "@colheita/design-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    "./tailwind-theme.css": "./src/tailwind-theme.css",
+    "./tailwind-preset": "./dist/tailwind-preset.cjs",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/tailwind-preset.ts --format esm,cjs --dts --clean",
+    "dev": "tsup src/index.ts src/tailwind-preset.ts --format esm,cjs --dts --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": [
+    "dist",
+    "src/tailwind-theme.css"
+  ],
+  "devDependencies": {
+    "@colheita/config": "workspace:*",
+    "tsup": "^8.5.0",
+    "typescript": "~5.9.3"
+  }
+}

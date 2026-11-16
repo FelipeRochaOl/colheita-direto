@@ -1,0 +1,9 @@
+import { OtpChallenge } from '../entities/otp-challenge.entity';
+
+export const OTP_CHALLENGE_REPOSITORY = Symbol('OTP_CHALLENGE_REPOSITORY');
+
+export interface OtpChallengeRepository {
+  findByPhoneNumber(phoneNumber: string): Promise<OtpChallenge | null>;
+  save(challenge: OtpChallenge): Promise<void>;
+  deleteByPhoneNumber(phoneNumber: string): Promise<void>;
+}

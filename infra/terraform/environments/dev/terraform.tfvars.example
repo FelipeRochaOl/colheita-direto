@@ -1,0 +1,4 @@
+atlas_org_id      = "ID_DA_ORGANIZACAO_NO_ATLAS"
+alert_email       = "voce@exemplo.com"
+# github_repository = "seu-usuario/colheita-direta"  # opcional: deploy automático pelo GitHub Actions
+# web_app_url     = "https://app.seudominio.com.br"  # opcional: sem domínio, usa o CloudFront

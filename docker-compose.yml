@@ -1,0 +1,16 @@
+# Infra local para desenvolvimento: MongoDB (mesmo motor do Atlas) e LocalStack (S3 + SQS).
+services:
+  mongodb:
+    image: mongo:8
+    ports: ["27017:27017"]
+    volumes: [mongodb-data:/data/db]
+
+  localstack:
+    image: localstack/localstack:4
+    ports: ["4566:4566"]
+    environment:
+      SERVICES: s3,sqs
+    volumes: ["./infra/localstack/init:/etc/localstack/init/ready.d"]
+
+volumes:
+  mongodb-data:

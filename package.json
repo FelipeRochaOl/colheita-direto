@@ -1,0 +1,24 @@
+{
+  "name": "colheita-direta",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "local:up": "docker compose up -d",
+    "local:down": "docker compose down",
+    "infra:start": "bash infra/scripts/infra-start.sh",
+    "infra:stop": "bash infra/scripts/infra-stop.sh"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "turbo": "^2.11.11",
+    "typescript": "~5.9.3"
+  }
+}
