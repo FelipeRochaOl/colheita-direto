@@ -49,13 +49,13 @@ Copie `infra/.env.example` para `infra/.env` e preencha. O arquivo é ignorado p
 
 | Variável | Obrigatória | O que é / como pegar |
 |---|---|---|
-| `MONGODB_ATLAS_PUBLIC_KEY` | sim | Chave de API do Atlas para o Terraform criar o projeto e o cluster M0. Atlas → **Organization Settings** → **Access Manager** → aba **Applications** → **API Keys** → **Create API Key**. Descrição: `terraform-colheita`. Permissão: **Organization Project Creator**. O Atlas mostra a *Public Key*. |
-| `MONGODB_ATLAS_PRIVATE_KEY` | sim | Na mesma tela. A *Private Key* aparece **uma única vez**: copie na hora. Na tela seguinte (**API Access List**), clique em **Add Access List Entry** → **Use Current IP Address** para liberar o seu IP. Sem isso, o Terraform recebe erro 401/403. |
+| `MONGODB_ATLAS_CLIENT_ID` | sim | Service Account do Atlas para o Terraform criar o projeto e o cluster M0. Atlas → **Organization Settings** → **Access Manager** → aba **Applications** → **Service Accounts** → **Create Service Account**. Nome: `terraform-colheita`. Permissão: **Organization Project Creator**. O Atlas mostra o *Client ID* (começa com `mdb_sa_id_`). |
+| `MONGODB_ATLAS_CLIENT_SECRET` | sim | Na mesma tela. O *Client Secret* (começa com `mdb_sa_sk_`) aparece **uma única vez**: copie na hora. Se a organização exigir lista de IPs para a API, adicione o seu IP na Service Account (**Add Access List Entry** → **Use Current IP Address**). |
 | `AWS_PROFILE` | não | Padrão `colheita-terraform` (o usuário IAM criado). Só mude se quiser usar outro perfil. |
 | `AWS_REGION` | não | Padrão `sa-east-1` (São Paulo). |
 
 ```bash
-cp infra/.env.example infra/.env   # depois preencha as duas chaves
+cp infra/.env.example infra/.env   # depois preencha o client ID e o secret
 pnpm infra:start
 ```
 

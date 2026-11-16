@@ -16,5 +16,5 @@ provider "aws" {
   }
 }
 
-# Credenciais via MONGODB_ATLAS_PUBLIC_KEY / MONGODB_ATLAS_PRIVATE_KEY.
+# Credenciais via MONGODB_ATLAS_CLIENT_ID / MONGODB_ATLAS_CLIENT_SECRET (Service Account), lidas de infra/.env.
 provider "mongodbatlas" {}

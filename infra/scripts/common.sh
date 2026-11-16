@@ -44,8 +44,10 @@ check_prerequisites() {
   require_command aws "Instale o AWS CLI v2."
   require_command terraform "Instale o Terraform >= 1.10."
   require_command jq "Instale o jq (brew install jq)."
-  [[ -n "${MONGODB_ATLAS_PUBLIC_KEY:-}" && -n "${MONGODB_ATLAS_PRIVATE_KEY:-}" ]] \
-    || fail "Defina MONGODB_ATLAS_PUBLIC_KEY e MONGODB_ATLAS_PRIVATE_KEY em infra/.env (copie de infra/.env.example)."
+  # Service Account (recomendado) ou, alternativa, chave de API programática antiga.
+  [[ ( -n "${MONGODB_ATLAS_CLIENT_ID:-}" && -n "${MONGODB_ATLAS_CLIENT_SECRET:-}" ) \
+    || ( -n "${MONGODB_ATLAS_PUBLIC_API_KEY:-}" && -n "${MONGODB_ATLAS_PRIVATE_API_KEY:-}" ) ]] \
+    || fail "Defina MONGODB_ATLAS_CLIENT_ID e MONGODB_ATLAS_CLIENT_SECRET em infra/.env (copie de infra/.env.example)."
   [[ -f "$ENVIRONMENT_DIRECTORY/terraform.tfvars" ]] \
     || fail "Crie $ENVIRONMENT_DIRECTORY/terraform.tfvars a partir do terraform.tfvars.example."
 
