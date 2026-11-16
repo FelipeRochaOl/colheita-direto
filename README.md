@@ -72,6 +72,6 @@ cd services/vision && uv run pytest
 
 ## Deploy (AWS)
 
-1. `infra/terraform/environments/dev`: preencha `terraform.tfvars` e `backend.hcl` a partir dos `.example`, depois rode `terraform init -backend-config=backend.hcl && terraform apply`.
+1. Preencha `infra/terraform/environments/dev/terraform.tfvars` a partir do `.example` e rode `pnpm infra:start`. O script cria o bucket de estado do Terraform, publica as imagens, a API e o site. Para apagar tudo: `pnpm infra:stop`. Passo a passo e variáveis em [`docs/deploy-aws.md`](docs/deploy-aws.md).
 2. Preencha no Secrets Manager as chaves do Asaas e da Meta (WhatsApp).
-3. Configure no GitHub as variáveis `AWS_DEPLOY_ROLE_ARN`, `API_URL`, `WEB_BUCKET_NAME` e `WEB_DISTRIBUTION_ID`, que vêm dos outputs do Terraform. Cada push na `main` publica a API, o worker, o serviço de visão e o site.
+3. (Opcional) Configure no GitHub as variáveis `AWS_DEPLOY_ROLE_ARN`, `API_URL`, `WEB_BUCKET_NAME` e `WEB_DISTRIBUTION_ID`, que vêm dos outputs do Terraform. Cada push na `main` publica a API, o worker, o serviço de visão e o site.
