@@ -9,6 +9,15 @@ print_step() { printf '\n\033[1;32m▶ %s\033[0m\n' "$1"; }
 print_warning() { printf '\033[1;33m⚠ %s\033[0m\n' "$1"; }
 fail() { printf '\033[1;31m✖ %s\033[0m\n' "$1" >&2; exit 1; }
 
+# Variáveis locais da infra (chaves do Atlas etc.). O arquivo é ignorado pelo git.
+INFRA_ENV_FILE="$REPOSITORY_ROOT/infra/.env"
+if [[ -f "$INFRA_ENV_FILE" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$INFRA_ENV_FILE"
+  set +a
+fi
+
 parse_arguments() {
   ENVIRONMENT="dev"
   SKIP_CONFIRMATION="false"
@@ -36,7 +45,7 @@ check_prerequisites() {
   require_command terraform "Instale o Terraform >= 1.10."
   require_command jq "Instale o jq (brew install jq)."
   [[ -n "${MONGODB_ATLAS_PUBLIC_KEY:-}" && -n "${MONGODB_ATLAS_PRIVATE_KEY:-}" ]] \
-    || fail "Defina MONGODB_ATLAS_PUBLIC_KEY e MONGODB_ATLAS_PRIVATE_KEY (chave de API da organização no Atlas)."
+    || fail "Defina MONGODB_ATLAS_PUBLIC_KEY e MONGODB_ATLAS_PRIVATE_KEY em infra/.env (copie de infra/.env.example)."
   [[ -f "$ENVIRONMENT_DIRECTORY/terraform.tfvars" ]] \
     || fail "Crie $ENVIRONMENT_DIRECTORY/terraform.tfvars a partir do terraform.tfvars.example."
 

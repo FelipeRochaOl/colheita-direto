@@ -43,7 +43,9 @@ O arquivo está no `.gitignore` e não vai para o repositório.
 | `github_repository` | não | `FelipeRochaOl/colheita-direto`, só se for usar o deploy automático pelo GitHub Actions (`.github/workflows/deploy.yml`). Sem ele, o deploy é só pelo `pnpm infra:start`. |
 | `web_app_url` | não | Endereço do site com domínio próprio. Vazio = usa o endereço `https://xxxx.cloudfront.net` gerado. |
 
-## 3. Variáveis no terminal (antes do `pnpm infra:start`)
+## 3. Variáveis em `infra/.env` (antes do `pnpm infra:start`)
+
+Copie `infra/.env.example` para `infra/.env` e preencha. O arquivo é ignorado pelo git e os scripts `infra:start`/`infra:stop` o carregam sozinhos. Variáveis já exportadas no terminal também funcionam.
 
 | Variável | Obrigatória | O que é / como pegar |
 |---|---|---|
@@ -52,14 +54,10 @@ O arquivo está no `.gitignore` e não vai para o repositório.
 | `AWS_PROFILE` | não | Padrão `colheita-terraform` (o usuário IAM criado). Só mude se quiser usar outro perfil. |
 | `AWS_REGION` | não | Padrão `sa-east-1` (São Paulo). |
 
-Para não digitar sempre, crie `~/.colheita-atlas.sh` (fora do repositório):
-
 ```bash
-export MONGODB_ATLAS_PUBLIC_KEY="..."
-export MONGODB_ATLAS_PRIVATE_KEY="..."
+cp infra/.env.example infra/.env   # depois preencha as duas chaves
+pnpm infra:start
 ```
-
-E rode `source ~/.colheita-atlas.sh && pnpm infra:start`.
 
 ## 4. Segredos no AWS Secrets Manager (depois do primeiro `infra:start`)
 
