@@ -6,6 +6,7 @@ import { PRODUCER_REPOSITORY } from './repositories/producer.repository';
 import { ProducerDocument, ProducerSchema } from './schemas/producer.schema';
 import { GetProducerProfileUseCase } from './use-cases/get-producer-profile.use-case';
 import { RegisterProducerUseCase } from './use-cases/register-producer.use-case';
+import { UpdateProducerProfileUseCase } from './use-cases/update-producer-profile.use-case';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: ProducerDocument.name, schema: ProducerSchema }])],
@@ -14,6 +15,7 @@ import { RegisterProducerUseCase } from './use-cases/register-producer.use-case'
     { provide: PRODUCER_REPOSITORY, useClass: MongoProducerRepository },
     RegisterProducerUseCase,
     GetProducerProfileUseCase,
+    UpdateProducerProfileUseCase,
   ],
   exports: [PRODUCER_REPOSITORY],
 })
