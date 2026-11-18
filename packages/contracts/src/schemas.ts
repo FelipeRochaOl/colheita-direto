@@ -85,6 +85,32 @@ export const registerNgoSchema = z.object({
 });
 export type RegisterNgoInput = z.infer<typeof registerNgoSchema>;
 
+// ---------- Edição de perfil ("Meus dados") ----------
+// Telefone é a identidade do login (OTP) e documentos são conferidos na aprovação/pagamento: não mudam aqui.
+export const updateProducerProfileSchema = registerProducerSchema.omit({ acceptedPrivacyPolicyVersion: true });
+export type UpdateProducerProfileInput = z.infer<typeof updateProducerProfileSchema>;
+export const producerProfileSchema = updateProducerProfileSchema.extend({ id: z.string() });
+export type ProducerProfile = z.infer<typeof producerProfileSchema>;
+
+export const updateBuyerProfileSchema = registerBuyerSchema.omit({ acceptedPrivacyPolicyVersion: true, document: true });
+export type UpdateBuyerProfileInput = z.infer<typeof updateBuyerProfileSchema>;
+export const buyerProfileSchema = updateBuyerProfileSchema.extend({
+  id: z.string(),
+  document: z.string(),
+  phoneNumber: z.string(),
+});
+export type BuyerProfile = z.infer<typeof buyerProfileSchema>;
+
+export const updateNgoProfileSchema = registerNgoSchema.omit({ acceptedPrivacyPolicyVersion: true, document: true });
+export type UpdateNgoProfileInput = z.infer<typeof updateNgoProfileSchema>;
+export const ngoProfileSchema = updateNgoProfileSchema.extend({
+  id: z.string(),
+  document: z.string(),
+  phoneNumber: z.string(),
+  isApproved: z.boolean(),
+});
+export type NgoProfile = z.infer<typeof ngoProfileSchema>;
+
 // ---------- Lotes de colheita ----------
 export const photoUploadUrlSchema = z.object({ uploadUrl: z.string().url(), photoKey: z.string() });
 export type PhotoUploadUrl = z.infer<typeof photoUploadUrlSchema>;
