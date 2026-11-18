@@ -1,6 +1,7 @@
 import { useRequestOtp, useVerifyOtp } from '@colheita/api-client';
 import { Alert, Button, Form, Input } from 'antd';
 import { useState } from 'react';
+import type { AuthSession } from '@colheita/contracts';
 import {
   formatInternationalPhoneNumber,
   isCompleteBrazilianPhoneNumber,
@@ -9,7 +10,7 @@ import {
 } from '@colheita/contracts';
 
 /** Login sem senha: telefone → código de 6 dígitos (WhatsApp, ou SMS como alternativa). */
-export function PhoneLoginForm({ onLoggedIn }: { onLoggedIn: () => void }) {
+export function PhoneLoginForm({ onLoggedIn }: { onLoggedIn: (session: AuthSession) => void }) {
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const requestOtp = useRequestOtp();
   const verifyOtp = useVerifyOtp();
