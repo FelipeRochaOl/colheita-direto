@@ -78,3 +78,17 @@ cd services/vision && uv run pytest
 1. Preencha `infra/terraform/environments/dev/terraform.tfvars` a partir do `.example` e rode `pnpm infra:start`. O script cria o bucket de estado do Terraform, publica as imagens, a API e o site. Para apagar tudo: `pnpm infra:stop`. Passo a passo e variáveis em [`docs/deploy-aws.md`](docs/deploy-aws.md).
 2. Preencha no Secrets Manager as chaves do Asaas e da Meta (WhatsApp).
 3. (Opcional) Configure no GitHub as variáveis `AWS_DEPLOY_ROLE_ARN`, `API_URL`, `WEB_BUCKET_NAME` e `WEB_DISTRIBUTION_ID`, que vêm dos outputs do Terraform. Cada push na `main` publica a API, o worker, o serviço de visão e o site.
+
+Para entrar: a conta "Ana Lima" deixou de existir, embora a sessão antiga ainda apareça no cabeçalho até você clicar em Sair. Para os testes e o vídeo:
+
+| Perfil | Conta | Telefone |
+| --- | --- | --- |
+| Produtor | João da Silva | (11) 90000-0101 |
+| Comprador (restaurante) | Restaurante Sabor da Terra | (11) 90000-0201 |
+| Comprador (mercado) | Mercado Bom Preço | (11) 90000-0202 |
+| Consumidor | Carla Mendes | (11) 90000-0203 |
+| ONG | Banco de Alimentos Alto Tietê | (11) 90000-0301 |
+| Transportadora | Fretes Alto Tietê (frete R$ 35 de saída + R$ 2,20/km, câmara fria, raio 200 km) | (11) 90000-0401 |
+| Prestador de serviço | Agro Serviços Mogi (embalagem, classificação, assistência técnica, raio 80 km) | (11) 90000-0402 |
+
+Essas contas são criadas pelo `pnpm seed:demo -- --reset` (em `apps/api`, ver acima), que **apaga o banco local** antes de recriar tudo. O código de login aparece no log da API. Transportadora e prestador já vêm aprovados e com preços divulgados: entre em **Meus serviços** para editar e responder solicitações; como produtor, contrate na aba **Frete e serviços** de **Minha produção**.
