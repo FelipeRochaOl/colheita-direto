@@ -11,6 +11,7 @@ import { NgoPage } from '../pages/ngo-page';
 import { OfferPage } from '../pages/offer-page';
 import { ProducerPage } from '../pages/producer-page';
 import { ProfilePage } from '../pages/profile-page';
+import { ServiceProviderPage } from '../pages/service-provider-page';
 import { SignupPage } from '../pages/signup-page';
 
 export const router = createBrowserRouter([
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: '/meus-dados', element: <ProfilePage /> },
       { path: '/produtor', element: <RequireRole role="producer"><ProducerPage /></RequireRole> },
       { path: '/pedidos', element: <RequireRole role="buyer"><BuyerOrdersPage /></RequireRole> },
+      { path: '/prestador', element: <RequireRole role="service_provider"><ServiceProviderPage /></RequireRole> },
       { path: '/doacoes', element: <RequireRole role="ngo"><NgoPage /></RequireRole> },
     ],
   },
