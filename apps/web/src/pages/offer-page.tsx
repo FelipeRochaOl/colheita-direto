@@ -8,7 +8,8 @@ import {
 } from '@colheita/ui-web';
 import { Alert, Button, Image, InputNumber, message, Skeleton } from 'antd';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Link, useNavigate, useParams } from 'react-router';
 import { useCart } from '../features/cart/hooks/use-cart';
 import { capitalize } from '../utils/labels';
 
@@ -34,6 +35,12 @@ export function OfferPage() {
 
   return (
     <PageSection>
+      <Link
+        to="/mercado"
+        className="mb-6 inline-flex items-center gap-2 text-green-dark! hover:underline"
+      >
+        <ArrowLeftOutlined /> Voltar para ofertas
+      </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <Image.PreviewGroup>
           <div className="grid grid-cols-2 gap-2">
@@ -65,8 +72,12 @@ export function OfferPage() {
             </span>
           </p>
           <p className="text-sm text-border-active">{offer.availableBoxes} caixas disponíveis</p>
-          <div className="flex gap-3 mt-6">
+          <label htmlFor="offer-boxes" className="mt-6 block text-sm font-medium">
+            Quantas caixas?
+          </label>
+          <div className="flex flex-wrap gap-3 mt-2">
             <InputNumber
+              id="offer-boxes"
               size="large"
               min={1}
               max={offer.availableBoxes}
