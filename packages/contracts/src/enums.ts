@@ -51,5 +51,18 @@ export const SERVICE_TYPES = [
 ] as const;
 export type ServiceType = (typeof SERVICE_TYPES)[number];
 
+/** Unidade de cobrança fixa por tipo de serviço. Transporte soma ainda a taxa de saída. */
+export const SERVICE_PRICE_UNITS = {
+  TRANSPORT: 'KM',
+  COLD_STORAGE: 'BOX_DAY',
+  PACKING: 'BOX',
+  GRADING: 'VISIT',
+  TECHNICAL_ASSISTANCE: 'VISIT',
+} as const satisfies Record<ServiceType, string>;
+export type ServicePriceUnit = (typeof SERVICE_PRICE_UNITS)[ServiceType];
+
+export const SERVICE_REQUEST_STATUSES = ['REQUESTED', 'ACCEPTED', 'DECLINED'] as const;
+export type ServiceRequestStatus = (typeof SERVICE_REQUEST_STATUSES)[number];
+
 export const DONATION_STATUSES = ['OFFERED', 'ACCEPTED', 'PICKED_UP', 'RECEIVED', 'EXPIRED'] as const;
 export type DonationStatus = (typeof DONATION_STATUSES)[number];
