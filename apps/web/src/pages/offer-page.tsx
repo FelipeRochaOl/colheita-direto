@@ -10,6 +10,7 @@ import { Alert, Button, Image, InputNumber, message, Skeleton } from 'antd';
 import { useState } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Link, useNavigate, useParams } from 'react-router';
+import { PHOTO_FALLBACK_SRC } from '../features/catalog/components/crop-photo';
 import { useCart } from '../features/cart/hooks/use-cart';
 import { capitalize } from '../utils/labels';
 
@@ -49,6 +50,7 @@ export function OfferPage() {
                 key={photoUrl}
                 src={photoUrl}
                 alt={`Foto ${index + 1} do lote`}
+                fallback={PHOTO_FALLBACK_SRC}
                 className="object-cover rounded-sm"
               />
             ))}
