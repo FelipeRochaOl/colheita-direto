@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSession } from '../features/auth/hooks/use-session';
 import { useCart } from '../features/cart/hooks/use-cart';
+import { CropPhoto } from '../features/catalog/components/crop-photo';
 import { capitalize } from '../utils/labels';
 
 export function CartPage() {
@@ -55,10 +56,10 @@ export function CartPage() {
           {items.map(({ offer, boxes }) => (
             <Card key={offer.id} size="small">
               <div className="flex items-center gap-4 flex-wrap">
-                <img
+                <CropPhoto
                   src={offer.photoUrls[0]}
                   alt=""
-                  className="w-16 h-16 object-cover rounded-sm"
+                  className="w-16 h-16 shrink-0 object-cover rounded-sm"
                 />
                 <div className="flex-1 min-w-40">
                   <div className="font-semibold">
