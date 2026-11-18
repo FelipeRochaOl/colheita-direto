@@ -2,6 +2,7 @@ import type { HarvestLot } from '@colheita/contracts';
 import { MoneyText, PercentText, QualityGradeBadge, describeQualityGrade } from '@colheita/ui-web';
 import { Card, Spin, Tag } from 'antd';
 import { capitalize, harvestLotStatusLabels, lotDestinationLabels } from '../../../utils/labels';
+import { CropPhoto } from '../../catalog/components/crop-photo';
 import { DestinationChooser } from './destination-chooser';
 
 export function HarvestLotCard({ harvestLot }: { harvestLot: HarvestLot }) {
@@ -10,10 +11,10 @@ export function HarvestLotCard({ harvestLot }: { harvestLot: HarvestLot }) {
   return (
     <Card>
       <div className="flex gap-4">
-        <img
+        <CropPhoto
           src={harvestLot.photoUrls[0]}
           alt={`Foto do lote de ${harvestLot.crop}`}
-          className="w-28 h-28 object-cover rounded-sm"
+          className="w-28 h-28 shrink-0 object-cover rounded-sm"
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
