@@ -2,6 +2,7 @@ import {
   useMyBuyerProfile,
   useMyNgoProfile,
   useMyProducerProfile,
+  useMyServiceProviderProfile,
 } from '@colheita/api-client';
 import { formatInternationalPhoneNumber, type UserRole } from '@colheita/contracts';
 import { PageSection } from '@colheita/ui-web';
@@ -12,8 +13,9 @@ import { useSession } from '../features/auth/hooks/use-session';
 import { BuyerSignupForm } from '../features/signup/components/buyer-signup-form';
 import { NgoSignupForm } from '../features/signup/components/ngo-signup-form';
 import { ProducerSignupForm } from '../features/signup/components/producer-signup-form';
+import { ServiceProviderProfileForm } from '../features/services/components/service-provider-profile-form';
 
-type EditableRole = Extract<UserRole, 'producer' | 'buyer' | 'ngo'>;
+type EditableRole = Extract<UserRole, 'producer' | 'buyer' | 'ngo' | 'service_provider'>;
 
 /** Carregamento/erro comuns às abas: o formulário só monta com os dados já buscados. */
 function ProfileLoader<Profile>({
@@ -45,6 +47,7 @@ export function ProfilePage() {
   const producerProfile = useMyProducerProfile(hasRole('producer'));
   const buyerProfile = useMyBuyerProfile(hasRole('buyer'));
   const ngoProfile = useMyNgoProfile(hasRole('ngo'));
+  const serviceProviderProfile = useMyServiceProviderProfile(hasRole('service_provider'));
 
   if (!isLoading && !session) return <Navigate to="/entrar?voltar=/meus-dados" replace />;
   if (!session) return null;
@@ -90,6 +93,17 @@ export function ProfilePage() {
               <NgoSignupForm profile={profile} onRegistered={notifySaved} />
             </>
           )}
+        </ProfileLoader>
+      ),
+    });
+
+  if (hasRole('service_provider'))
+    tabs.push({
+      key: 'service_provider',
+      label: 'Transporte e serviços',
+      children: (
+        <ProfileLoader query={serviceProviderProfile}>
+          {(profile) => <ServiceProviderProfileForm profile={profile} onSaved={notifySaved} />}
         </ProfileLoader>
       ),
     });
