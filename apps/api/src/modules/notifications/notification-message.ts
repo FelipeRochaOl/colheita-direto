@@ -8,6 +8,8 @@ export interface NotificationTemplate {
   name: string;
   languageCode: string;
   bodyParameters: string[];
+  /** Templates de autenticação (OTP) exigem o código também no botão "copiar código". */
+  copyCodeButtonParameter?: string;
 }
 
 export interface NotificationMessage {
