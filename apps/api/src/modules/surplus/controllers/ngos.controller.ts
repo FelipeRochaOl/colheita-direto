@@ -1,7 +1,13 @@
-import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { confirmDonationReceiptSchema, registerNgoSchema } from '@colheita/contracts';
-import type { AuthSession, ConfirmDonationReceiptInput, RegisterNgoInput } from '@colheita/contracts';
+import { confirmDonationReceiptSchema, registerNgoSchema, updateNgoProfileSchema } from '@colheita/contracts';
+import type {
+  AuthSession,
+  ConfirmDonationReceiptInput,
+  NgoProfile,
+  RegisterNgoInput,
+  UpdateNgoProfileInput,
+} from '@colheita/contracts';
 import { CurrentUser, Roles } from '../../../shared/auth/auth.decorators';
 import { AuthenticatedUser } from '../../../shared/auth/authenticated-user';
 import { ApiBodyFromSchema, ValidatedBody } from '../../../shared/validation/validated-body.decorator';
@@ -10,7 +16,9 @@ import { AcceptDonationUseCase } from '../use-cases/accept-donation.use-case';
 import { ApproveNgoUseCase } from '../use-cases/approve-ngo.use-case';
 import { ConfirmDonationReceiptUseCase } from '../use-cases/confirm-donation-receipt.use-case';
 import { ListAvailableDonationsUseCase } from '../use-cases/list-available-donations.use-case';
+import { GetNgoProfileUseCase } from '../use-cases/get-ngo-profile.use-case';
 import { RegisterNgoUseCase } from '../use-cases/register-ngo.use-case';
+import { UpdateNgoProfileUseCase } from '../use-cases/update-ngo-profile.use-case';
 
 @ApiTags('Doações')
 @ApiBearerAuth()
@@ -22,6 +30,8 @@ export class NgosController {
     private readonly listAvailableDonationsUseCase: ListAvailableDonationsUseCase,
     private readonly acceptDonationUseCase: AcceptDonationUseCase,
     private readonly confirmDonationReceiptUseCase: ConfirmDonationReceiptUseCase,
+    private readonly getNgoProfileUseCase: GetNgoProfileUseCase,
+    private readonly updateNgoProfileUseCase: UpdateNgoProfileUseCase,
   ) {}
 
   @Post('ngos')
@@ -31,6 +41,22 @@ export class NgosController {
     @ValidatedBody(registerNgoSchema) input: RegisterNgoInput,
   ): Promise<AuthSession> {
     return this.registerNgoUseCase.execute(user, input);
+  }
+
+  @Get('ngos/me')
+  @Roles('ngo')
+  getMyProfile(@CurrentUser() user: AuthenticatedUser): Promise<NgoProfile> {
+    return this.getNgoProfileUseCase.execute(user.userId);
+  }
+
+  @Put('ngos/me')
+  @Roles('ngo')
+  @ApiBodyFromSchema(updateNgoProfileSchema)
+  updateMyProfile(
+    @CurrentUser() user: AuthenticatedUser,
+    @ValidatedBody(updateNgoProfileSchema) input: UpdateNgoProfileInput,
+  ): Promise<AuthSession> {
+    return this.updateNgoProfileUseCase.execute(user.userId, input);
   }
 
   @Post('ngos/:ngoId/approval')
