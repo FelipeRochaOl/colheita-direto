@@ -26,6 +26,7 @@ import { HandlePaymentConfirmedUseCase } from '../modules/orders/use-cases/handl
 import { RegisterProducerUseCase } from '../modules/producers/use-cases/register-producer.use-case';
 import { ApproveServiceProviderUseCase } from '../modules/service-providers/use-cases/approve-service-provider.use-case';
 import { RegisterServiceProviderUseCase } from '../modules/service-providers/use-cases/register-service-provider.use-case';
+import { UpdateServiceProviderProfileUseCase } from '../modules/service-providers/use-cases/update-service-provider-profile.use-case';
 import { AcceptDonationUseCase } from '../modules/surplus/use-cases/accept-donation.use-case';
 import { ApproveNgoUseCase } from '../modules/surplus/use-cases/approve-ngo.use-case';
 import { ConfirmDonationReceiptUseCase } from '../modules/surplus/use-cases/confirm-donation-receipt.use-case';
@@ -319,6 +320,15 @@ const BUYERS = [
     latitude: -23.4628,
     longitude: -46.5333,
   },
+  {
+    phoneNumber: '+5511900000203',
+    name: 'Carla Mendes',
+    buyerType: 'CONSUMER' as const,
+    document: '52998224725',
+    deliveryAddress: 'Rua Ipiranga, 300 - Mogi das Cruzes/SP',
+    latitude: -23.5226,
+    longitude: -46.1883,
+  },
 ];
 
 const roundToHalf = (value: number) => Math.round(value * 2) / 2;
@@ -376,7 +386,43 @@ async function seedDemoCatalog(): Promise<void> {
     hasRefrigeration: true,
     acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION,
   });
+  // Preços divulgados pelo transportador (aparecem na aba "Frete e serviços" do produtor)
+  await app.get(UpdateServiceProviderProfileUseCase).execute(transporter.id, {
+    name: 'Fretes Alto Tietê',
+    offerings: [
+      { serviceType: 'TRANSPORT', price: 2.2, baseFee: 35, description: 'Caminhão baú refrigerado 3 t' },
+      { serviceType: 'COLD_STORAGE', price: 1.4 },
+    ],
+    baseLocation: { latitude: -23.5229, longitude: -46.188 },
+    serviceRadiusKm: 200,
+    vehicleCapacityKg: 3000,
+    hasRefrigeration: true,
+  });
   await app.get(ApproveServiceProviderUseCase).execute(transporter.id);
+
+  // Prestador de serviços (sem frete): embalagem, classificação e assistência técnica
+  const serviceProvider = await createUser('+5511900000402');
+  const serviceProviderProfile = {
+    name: 'Agro Serviços Mogi',
+    baseLocation: { latitude: -23.5317, longitude: -46.1922 },
+    serviceRadiusKm: 80,
+    hasRefrigeration: false,
+  };
+  await app.get(RegisterServiceProviderUseCase).execute(asAuthenticated(serviceProvider), {
+    ...serviceProviderProfile,
+    document: '33444555000166',
+    serviceTypes: ['PACKING', 'GRADING', 'TECHNICAL_ASSISTANCE'],
+    acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION,
+  });
+  await app.get(UpdateServiceProviderProfileUseCase).execute(serviceProvider.id, {
+    ...serviceProviderProfile,
+    offerings: [
+      { serviceType: 'PACKING', price: 1.8, description: 'Lavagem, seleção e embalagem em caixa K' },
+      { serviceType: 'GRADING', price: 120, description: 'Classificação presencial do lote' },
+      { serviceType: 'TECHNICAL_ASSISTANCE', price: 180, description: 'Visita de agrônomo' },
+    ],
+  });
+  await app.get(ApproveServiceProviderUseCase).execute(serviceProvider.id);
 
   const ngo = await createUser('+5511900000301');
   await app.get(RegisterNgoUseCase).execute(asAuthenticated(ngo), {
@@ -514,6 +560,7 @@ async function seedDemoCatalog(): Promise<void> {
   for (const buyer of BUYERS) console.log(`  comprador ${buyer.phoneNumber}  ${buyer.name}`);
   console.log(`  ONG       +5511900000301  Banco de Alimentos Alto Tietê`);
   console.log(`  frete     +5511900000401  Fretes Alto Tietê`);
+  console.log(`  serviços  +5511900000402  Agro Serviços Mogi`);
   await app.close();
 }
 
