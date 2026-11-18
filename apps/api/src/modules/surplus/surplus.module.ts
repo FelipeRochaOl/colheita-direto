@@ -12,9 +12,11 @@ import { NgoDocument, NgoSchema } from './schemas/ngo.schema';
 import { AcceptDonationUseCase } from './use-cases/accept-donation.use-case';
 import { ApproveNgoUseCase } from './use-cases/approve-ngo.use-case';
 import { ConfirmDonationReceiptUseCase } from './use-cases/confirm-donation-receipt.use-case';
+import { GetNgoProfileUseCase } from './use-cases/get-ngo-profile.use-case';
 import { ListAvailableDonationsUseCase } from './use-cases/list-available-donations.use-case';
 import { OfferDonationUseCase } from './use-cases/offer-donation.use-case';
 import { RegisterNgoUseCase } from './use-cases/register-ngo.use-case';
+import { UpdateNgoProfileUseCase } from './use-cases/update-ngo-profile.use-case';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { RegisterNgoUseCase } from './use-cases/register-ngo.use-case';
     ListAvailableDonationsUseCase,
     AcceptDonationUseCase,
     ConfirmDonationReceiptUseCase,
+    GetNgoProfileUseCase,
+    UpdateNgoProfileUseCase,
   ],
   exports: [DONATION_REPOSITORY, OfferDonationUseCase],
 })
