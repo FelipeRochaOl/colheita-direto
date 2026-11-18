@@ -8,9 +8,10 @@ import { ExpenseForm } from '../features/farm-management/components/expense-form
 import { FarmSummaryPanel } from '../features/farm-management/components/farm-summary-panel';
 import { HarvestLotCard } from '../features/harvest-lots/components/harvest-lot-card';
 import { NewHarvestLotForm } from '../features/harvest-lots/components/new-harvest-lot-form';
+import { HireServicePanel } from '../features/services/components/hire-service-panel';
 import { OrderList } from '../features/orders/components/order-list';
 
-const TAB_KEYS = ['lots', 'orders', 'finance'] as const;
+const TAB_KEYS = ['lots', 'orders', 'services', 'finance'] as const;
 type ProducerTab = (typeof TAB_KEYS)[number];
 
 /** Lotes que esperam o produtor escolher o destino. */
@@ -126,6 +127,7 @@ export function ProducerPage() {
             label: <TabLabel label="Pedidos" pending={ordersAwaitingAcceptance} />,
             children: <ProducerOrdersTab />,
           },
+          { key: 'services', label: 'Frete e serviços', children: <HireServicePanel /> },
           { key: 'finance', label: 'Finanças', children: <FarmManagementTab /> },
         ]}
       />
