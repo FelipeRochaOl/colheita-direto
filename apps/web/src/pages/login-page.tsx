@@ -3,6 +3,7 @@ import { gradients } from '@colheita/design-tokens';
 import { BrandMark } from '@colheita/ui-web';
 import { useNavigate, useSearchParams } from 'react-router';
 import { PhoneLoginForm } from '../features/auth/components/phone-login-form';
+import { landingPathFor } from '../utils/role-home';
 
 const LOGIN_BENEFITS = [
   'Venda direto, sem atravessador',
@@ -44,7 +45,11 @@ export function LoginPage() {
           <p className="mt-3 mb-8 inline-flex items-center gap-2 text-border-active">
             <LockOutlined /> Sem senha: você recebe um código no WhatsApp (ou SMS).
           </p>
-          <PhoneLoginForm onLoggedIn={() => navigate(searchParams.get('voltar') ?? '/cadastro')} />
+          <PhoneLoginForm
+            onLoggedIn={(session) =>
+              navigate(landingPathFor(session.user.roles, searchParams.get('voltar')))
+            }
+          />
         </div>
       </div>
     </section>
