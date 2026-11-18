@@ -6,6 +6,7 @@ import {
   LOT_DESTINATIONS,
   ORDER_STATUSES,
   QUALITY_GRADES,
+  SERVICE_REQUEST_STATUSES,
   SERVICE_TYPES,
   USER_ROLES,
 } from './enums';
@@ -74,6 +75,95 @@ export const registerServiceProviderSchema = z.object({
   acceptedPrivacyPolicyVersion: z.string(),
 });
 export type RegisterServiceProviderInput = z.infer<typeof registerServiceProviderSchema>;
+
+/** Serviço divulgado pelo prestador. `price` é por unidade (ver SERVICE_PRICE_UNITS); `baseFee` é a taxa de saída do frete. */
+export const serviceOfferingSchema = z.object({
+  serviceType: z.enum(SERVICE_TYPES),
+  price: z.number().positive().max(100_000),
+  baseFee: z.number().min(0).max(100_000).default(0),
+  description: z.string().trim().max(280).optional(),
+});
+export type ServiceOffering = z.infer<typeof serviceOfferingSchema>;
+
+export const updateServiceProviderProfileSchema = z.object({
+  name: z.string().min(2),
+  offerings: z
+    .array(serviceOfferingSchema)
+    .min(1, 'Divulgue ao menos um serviço')
+    .refine(
+      (offerings) => new Set(offerings.map((offering) => offering.serviceType)).size === offerings.length,
+      'Cada serviço aparece uma vez só',
+    ),
+  baseLocation: geoPointSchema,
+  serviceRadiusKm: z.number().positive().max(500),
+  vehicleCapacityKg: z.number().positive().nullable().optional(),
+  hasRefrigeration: z.boolean().default(false),
+});
+export type UpdateServiceProviderProfileInput = z.input<typeof updateServiceProviderProfileSchema>;
+export const serviceProviderProfileSchema = updateServiceProviderProfileSchema.extend({
+  id: z.string(),
+  document: z.string(),
+  phoneNumber: z.string(),
+  isApproved: z.boolean(),
+});
+export type ServiceProviderProfile = z.infer<typeof serviceProviderProfileSchema>;
+
+// ---------- Contratação de serviços pelo produtor ----------
+export const searchServiceProvidersSchema = z.object({
+  serviceType: z.enum(SERVICE_TYPES),
+  /** Quantidade na unidade do serviço: km da viagem, caixas×dias, caixas ou visitas. */
+  quantity: z.number().positive().max(100_000).default(1),
+});
+export type SearchServiceProvidersInput = z.input<typeof searchServiceProvidersSchema>;
+
+export const availableServiceProviderSchema = z.object({
+  serviceProviderId: z.string(),
+  name: z.string(),
+  serviceType: z.enum(SERVICE_TYPES),
+  description: z.string().nullable(),
+  price: z.number(),
+  baseFee: z.number(),
+  distanceKm: z.number(),
+  serviceRadiusKm: z.number(),
+  hasRefrigeration: z.boolean(),
+  vehicleCapacityKg: z.number().nullable(),
+  estimatedTotal: z.number(),
+});
+export type AvailableServiceProvider = z.infer<typeof availableServiceProviderSchema>;
+
+export const createServiceRequestSchema = z.object({
+  serviceProviderId: z.string().min(1),
+  serviceType: z.enum(SERVICE_TYPES),
+  quantity: z.number().positive().max(100_000),
+  scheduledFor: z.iso.date().optional(),
+  notes: z.string().trim().max(500).optional(),
+});
+export type CreateServiceRequestInput = z.infer<typeof createServiceRequestSchema>;
+
+export const serviceRequestSchema = z.object({
+  id: z.string(),
+  producerId: z.string(),
+  producerName: z.string(),
+  serviceProviderId: z.string(),
+  serviceProviderName: z.string(),
+  serviceType: z.enum(SERVICE_TYPES),
+  quantity: z.number(),
+  estimatedTotal: z.number(),
+  scheduledFor: z.string().nullable(),
+  notes: z.string().nullable(),
+  pickupLocation: geoPointSchema,
+  status: z.enum(SERVICE_REQUEST_STATUSES),
+  /** Celular da outra parte, liberado só depois do aceite (o pagamento é combinado entre eles). */
+  counterpartPhoneNumber: z.string().nullable(),
+  createdAt: z.string(),
+});
+export type ServiceRequest = z.infer<typeof serviceRequestSchema>;
+
+export const serviceRequestBoardSchema = z.object({
+  sent: z.array(serviceRequestSchema),
+  received: z.array(serviceRequestSchema),
+});
+export type ServiceRequestBoard = z.infer<typeof serviceRequestBoardSchema>;
 
 export const registerNgoSchema = z.object({
   name: z.string().min(2),
