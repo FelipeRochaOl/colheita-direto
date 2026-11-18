@@ -5,7 +5,7 @@ export const HOME_BY_ROLE: Partial<Record<UserRole, string>> = {
   producer: '/produtor',
   buyer: '/mercado',
   ngo: '/doacoes',
-  service_provider: '/',
+  service_provider: '/prestador',
 };
 
 /** Links de área por perfil, mostrados no topo para quem está logado. */
@@ -13,6 +13,7 @@ export const ROLE_AREA_LINKS: Array<{ role: UserRole; to: string; label: string 
   { role: 'producer', to: '/produtor', label: 'Minha produção' },
   { role: 'buyer', to: '/pedidos', label: 'Meus pedidos' },
   { role: 'ngo', to: '/doacoes', label: 'Doações' },
+  { role: 'service_provider', to: '/prestador', label: 'Meus serviços' },
 ];
 
 /** Destino depois do login: o pedido explícito (voltar), a área do primeiro perfil ou o cadastro. */
