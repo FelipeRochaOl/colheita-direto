@@ -1,5 +1,6 @@
 import type {
   AuthSession,
+  BuyerProfile,
   ConfirmDonationReceiptInput,
   ConfirmLotDestinationInput,
   CreateHarvestLotInput,
@@ -7,14 +8,19 @@ import type {
   Donation,
   HarvestLot,
   ImpactIndicators,
+  NgoProfile,
   Offer,
   Order,
   PhotoUploadUrl,
+  ProducerProfile,
   RegisterBuyerInput,
   RegisterNgoInput,
   RegisterProducerInput,
   RegisterServiceProviderInput,
   SearchOffersInput,
+  UpdateBuyerProfileInput,
+  UpdateNgoProfileInput,
+  UpdateProducerProfileInput,
 } from '@colheita/contracts';
 import { ApiError } from './api-error';
 import { SessionStorage } from './session-storage';
@@ -84,6 +90,26 @@ export class ColheitaApiClient {
   }
   registerNgo(input: RegisterNgoInput) {
     return this.requestNewSession('/ngos', input);
+  }
+
+  // ---------- Meus dados (edição devolve sessão nova com o nome atualizado) ----------
+  getMyProducerProfile() {
+    return this.request<ProducerProfile>('GET', '/producers/me');
+  }
+  updateMyProducerProfile(input: UpdateProducerProfileInput) {
+    return this.requestNewSession('/producers/me', input, 'PUT');
+  }
+  getMyBuyerProfile() {
+    return this.request<BuyerProfile>('GET', '/buyers/me');
+  }
+  updateMyBuyerProfile(input: UpdateBuyerProfileInput) {
+    return this.requestNewSession('/buyers/me', input, 'PUT');
+  }
+  getMyNgoProfile() {
+    return this.request<NgoProfile>('GET', '/ngos/me');
+  }
+  updateMyNgoProfile(input: UpdateNgoProfileInput) {
+    return this.requestNewSession('/ngos/me', input, 'PUT');
   }
 
   // ---------- Lotes ----------
@@ -159,8 +185,8 @@ export class ColheitaApiClient {
   }
 
   // ---------- Infraestrutura ----------
-  private async requestNewSession(path: string, body: unknown): Promise<AuthSession> {
-    const session = await this.request<AuthSession>('POST', path, body);
+  private async requestNewSession(path: string, body: unknown, method = 'POST'): Promise<AuthSession> {
+    const session = await this.request<AuthSession>(method, path, body);
     await this.sessionStorage.save(session);
     return session;
   }
