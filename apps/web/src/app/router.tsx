@@ -10,6 +10,7 @@ import { MarketplacePage } from '../pages/marketplace-page';
 import { NgoPage } from '../pages/ngo-page';
 import { OfferPage } from '../pages/offer-page';
 import { ProducerPage } from '../pages/producer-page';
+import { ProfilePage } from '../pages/profile-page';
 import { SignupPage } from '../pages/signup-page';
 
 export const router = createBrowserRouter([
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: '/impacto', element: <ImpactPage /> },
       { path: '/entrar', element: <LoginPage /> },
       { path: '/cadastro', element: <SignupPage /> },
+      { path: '/meus-dados', element: <ProfilePage /> },
       { path: '/produtor', element: <RequireRole role="producer"><ProducerPage /></RequireRole> },
       { path: '/pedidos', element: <RequireRole role="buyer"><BuyerOrdersPage /></RequireRole> },
       { path: '/doacoes', element: <RequireRole role="ngo"><NgoPage /></RequireRole> },
