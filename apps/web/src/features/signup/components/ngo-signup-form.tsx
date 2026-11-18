@@ -1,5 +1,5 @@
-import { useRegisterNgo } from '@colheita/api-client';
-import type { GeoPoint } from '@colheita/contracts';
+import { useRegisterNgo, useUpdateMyNgoProfile } from '@colheita/api-client';
+import type { GeoPoint, NgoProfile } from '@colheita/contracts';
 import { Alert, Button, Form, Input, InputNumber } from 'antd';
 import { LocationField } from './location-field';
 import { PRIVACY_POLICY_VERSION, PrivacyConsentField } from './privacy-consent-field';
@@ -12,28 +12,45 @@ interface NgoSignupValues {
   pickupRadiusKm: number;
 }
 
-export function NgoSignupForm({ onRegistered }: { onRegistered: () => void }) {
+/** Cadastro da ONG; com `profile` vira a edição de "Meus dados" (CNPJ não muda). */
+export function NgoSignupForm({
+  onRegistered,
+  profile,
+}: {
+  onRegistered: () => void;
+  profile?: NgoProfile;
+}) {
   const registerNgo = useRegisterNgo();
+  const updateProfile = useUpdateMyNgoProfile();
+  const isEditing = Boolean(profile);
+  const mutation = isEditing ? updateProfile : registerNgo;
   return (
     <Form<NgoSignupValues>
       layout="vertical"
       requiredMark={false}
-      initialValues={{ pickupRadiusKm: 50 }}
-      onFinish={(values) =>
-        registerNgo.mutate(
-          { ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION },
-          { onSuccess: onRegistered },
-        )
+      initialValues={profile ?? { pickupRadiusKm: 50 }}
+      onFinish={({ document, ...values }) =>
+        isEditing
+          ? updateProfile.mutate(values, { onSuccess: onRegistered })
+          : registerNgo.mutate(
+              { ...values, document, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION },
+              { onSuccess: onRegistered },
+            )
       }
     >
-      {registerNgo.error && (
-        <Alert type="error" showIcon message={registerNgo.error.message} className="mb-4!" />
+      {mutation.error && (
+        <Alert type="error" showIcon message={mutation.error.message} className="mb-4!" />
       )}
       <Form.Item name="name" label="Nome da organização" rules={[{ required: true }]}>
         <Input size="large" />
       </Form.Item>
-      <Form.Item name="document" label="CNPJ" rules={[{ required: true, min: 14 }]}>
-        <Input size="large" />
+      <Form.Item
+        name="document"
+        label="CNPJ"
+        rules={[{ required: true, min: 14 }]}
+        extra={isEditing ? 'O CNPJ foi conferido na aprovação e não pode ser alterado aqui.' : undefined}
+      >
+        <Input size="large" disabled={isEditing} />
       </Form.Item>
       <Form.Item name="address" label="Endereço" rules={[{ required: true }]}>
         <Input size="large" />
@@ -48,9 +65,9 @@ export function NgoSignupForm({ onRegistered }: { onRegistered: () => void }) {
       <Form.Item name="pickupRadiusKm" label="Até quantos km vocês retiram">
         <InputNumber min={5} max={200} />
       </Form.Item>
-      <PrivacyConsentField />
-      <Button type="primary" htmlType="submit" size="large" loading={registerNgo.isPending}>
-        Cadastrar organização
+      {!isEditing && <PrivacyConsentField />}
+      <Button type="primary" htmlType="submit" size="large" loading={mutation.isPending}>
+        {isEditing ? 'Salvar alterações' : 'Cadastrar organização'}
       </Button>
     </Form>
   );
