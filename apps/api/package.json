@@ -10,7 +10,8 @@
     "start:worker": "node dist/worker.js",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "seed:demo": "node --env-file-if-exists=.env dist/scripts/seed-demo-catalog.js"
+    "seed:demo": "node --env-file-if-exists=.env dist/scripts/seed-demo-catalog.js",
+    "photos:restore": "node --env-file-if-exists=.env dist/scripts/restore-demo-photos.js"
   },
   "dependencies": {
     "@anthropic-ai/bedrock-sdk": "^1.1.2",
