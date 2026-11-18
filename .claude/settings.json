@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./ai rules*)",
+      "Bash(./ai areas*)",
+      "Bash(./ai doctor*)",
+      "Bash(./ai scripts*)",
+      "Bash(./ai --dry-run *)",
+      "Bash(ai-memory search *)",
+      "Bash(ai-memory read-page *)",
+      "Bash(ai-memory handoffs*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.local)",
+      "Read(./.env.*.local)",
+      "Read(./.env.production)",
+      "Read(./.env.development)",
+      "Read(**/*credentials*.env)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/id_rsa*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v bun >/dev/null 2>&1 && bun \"$CLAUDE_PROJECT_DIR/.ai/context/src/hook.ts\" --agent claude || true"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v bun >/dev/null 2>&1 && bun \"$CLAUDE_PROJECT_DIR/.ai/context/src/hook.ts\" --agent claude || true"
+          }
+        ]
+      }
+    ]
+  }
+}

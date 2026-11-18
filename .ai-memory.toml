@@ -1,0 +1,13 @@
+# Escopo do ai-memory para este repositório (ver AGENTS.md).
+# Clientes MCP estáticos (Codex, Copilot) passam este par em toda chamada.
+workspace = "default"
+project = "feliperochaol-colheita-direto"
+
+[capture]
+# Segredos nunca entram na captura.
+ignore_paths = [
+  ".env",
+  "**/.env",
+  "**/.env.local",
+  "**/*credentials*",
+]

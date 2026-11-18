@@ -1,0 +1,40 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v bun >/dev/null 2>&1 && bun \"$(git rev-parse --show-toplevel)/.ai/context/src/hook.ts\" --agent codex || true",
+            "commandWindows": "powershell -NoProfile -Command \"if (Get-Command bun -ErrorAction SilentlyContinue) { bun \\\"$(git rev-parse --show-toplevel)/.ai/context/src/hook.ts\\\" --agent codex }\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v bun >/dev/null 2>&1 && bun \"$(git rev-parse --show-toplevel)/.ai/context/src/hook.ts\" --agent codex || true",
+            "commandWindows": "powershell -NoProfile -Command \"if (Get-Command bun -ErrorAction SilentlyContinue) { bun \\\"$(git rev-parse --show-toplevel)/.ai/context/src/hook.ts\\\" --agent codex }\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v bun >/dev/null 2>&1 && bun \"$(git rev-parse --show-toplevel)/.ai/context/src/hook.ts\" --agent codex || true",
+            "commandWindows": "powershell -NoProfile -Command \"if (Get-Command bun -ErrorAction SilentlyContinue) { bun \\\"$(git rev-parse --show-toplevel)/.ai/context/src/hook.ts\\\" --agent codex }\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

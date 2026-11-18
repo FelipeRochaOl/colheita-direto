@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+# ./ai "<task>"            roteia a task (Graphify → Jev → CLI do agente)
+# ./ai rules|areas|sync|doctor|prefs   contexto por área (ver .ai/rules)
+# ./ai scripts | ./ai run <script>     biblioteca de scripts (.ai/scripts)
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT" || exit 1
+command -v bun >/dev/null 2>&1 || { echo "bun não encontrado: instale em https://bun.sh" >&2; exit 1; }
+case "${1:-}" in
+  rules|areas|sync|doctor|prefs|scripts|run|insights)
+    exec bun "$ROOT/.ai/context/src/cli.ts" "$@" ;;
+esac
+if [ ! -f "$ROOT/.ai/jev/src/cli.ts" ]; then
+  echo "Jev não está instalado neste projeto (rode setup/install.sh). Subcomandos: rules, areas, sync, doctor, prefs, scripts, run" >&2
+  exit 1
+fi
+exec bun "$ROOT/.ai/jev/src/cli.ts" "$@"

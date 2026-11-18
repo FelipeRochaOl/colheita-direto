@@ -1,0 +1,71 @@
+# Routing, risk, test, review and workflow levels for the AI-assisted workflow.
+# Read by `./ai` (.ai/jev) and the Jev MCP server. Agent rules live in AGENTS.md.
+# Gerado por setup/install.sh — ajuste à vontade.
+
+version: 1
+
+graph:
+  path: graphify-out/graph.json
+  max_files: 8
+  # Palavras em português → vocabulário do código, para tasks em PT acharem o grafo.
+  synonyms:
+    autenticacao: auth
+    configuracao: config
+    rota: routes
+    servico: service
+    controlador: controller
+    repositorio: repository
+    usuario: user
+    pedido: order
+
+# Profiles Jev chooses between. Descriptions are the routing criteria.
+agents:
+  claude: >-
+    Claude Code: ambiguous, design-heavy or cross-cutting work — architecture changes,
+    multi-module refactors, debugging with unclear cause, or writing docs and plans.
+  codex: >-
+    OpenAI Codex: well-scoped implementation or bug fix with clear acceptance
+    criteria, touching a handful of known files, that can run autonomously end to end.
+
+# Ordered lowest → highest.
+risk:
+  low: Cosmetic or isolated change; no behavior change for other modules.
+  moderate: Changes behavior in one module or a shared type with few dependents.
+  high: Touches shared domain types, public API contracts, auth or the data model.
+  critical: Security, secrets, data loss or a change that can take the whole app down.
+
+tests:
+  none: No behavior change (docs, copy, formatting, config comments).
+  unit: Logic inside a single function, service or component.
+  integration: Behavior across modules or across a process/API boundary.
+  e2e: User-visible flow that needs the full app running.
+
+review:
+  "true": A human should review before merging (risky, cross-cutting, security-sensitive or hard to verify).
+  "false": Safe to merge after the agent's own verification.
+  # Also force review at or above this risk level.
+  force_at_risk: high
+
+# Workflow the agent follows, picked from Jev's risk level (`--workflow` overrides).
+workflow:
+  low: Implement directly. Do not write planning documents or run multi-step workflows.
+  moderate: Use the bmad-build skill.
+  high: Use the bmad-spec skill to write a short spec, then bmad-build, then bmad-code-review.
+  critical: Use the bmad-spec skill to write a short spec, then stop and ask the user to approve it before bmad-build and bmad-code-review.
+
+# Commands the agents may run without asking (Claude allowlist / Copilot --allow-tool).
+# Só invocações específicas: interpretadores soltos (python, node, npx, uv, bun...) são ignorados,
+# pois rodariam qualquer código e furariam o bloqueio de git commit/push.
+permissions:
+  commands: ["npm test", "npm run typecheck", "npm run lint", "npm run build", "npm install", "npm ci"]
+  # Sessões headless (`./ai --headless`, CI): os comandos acima executam scripts do projeto que o
+  # agente pode editar; só ficam liberados com true. Prefira true apenas dentro de container/sandbox.
+  headless_commands: false
+  # true liga o Claude in Chrome nas sessões do `./ai` (precisa da extensão).
+  chrome: false
+
+# After a successful agent run (exit 0, files changed), `./ai` commits and pushes
+# only the files the agent touched. Per run: --no-commit or --no-push.
+git:
+  commit: true
+  push: false

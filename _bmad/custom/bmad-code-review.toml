@@ -1,0 +1,5 @@
+# ai-context: gerado por ./ai sync — edite .ai/rules ou apague esta linha para assumir o arquivo.
+[workflow]
+activation_steps_append = [
+  "Antes de começar, rode `./ai rules --area security --area qa (e --files com os arquivos do diff)` e siga as regras do time e as preferências do usuário que ele imprimir.",
+]

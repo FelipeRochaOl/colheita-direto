@@ -1,0 +1,4 @@
+
+# ./ai --dry-run e ai-memory search precisam de rede dentro do sandbox (setup/install.sh).
+[sandbox_workspace_write]
+network_access = true
