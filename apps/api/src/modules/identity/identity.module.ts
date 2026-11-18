@@ -11,6 +11,7 @@ import { OtpChallengeDocument, OtpChallengeSchema } from './schemas/otp-challeng
 import { UserDocument, UserSchema } from './schemas/user.schema';
 import { SessionTokenService } from './services/session-token.service';
 import { GrantUserRoleUseCase } from './use-cases/grant-user-role.use-case';
+import { RenameUserUseCase } from './use-cases/rename-user.use-case';
 import { RefreshSessionUseCase } from './use-cases/refresh-session.use-case';
 import { RequestOtpUseCase } from './use-cases/request-otp.use-case';
 import { VerifyOtpUseCase } from './use-cases/verify-otp.use-case';
@@ -37,7 +38,8 @@ import { VerifyOtpUseCase } from './use-cases/verify-otp.use-case';
     VerifyOtpUseCase,
     RefreshSessionUseCase,
     GrantUserRoleUseCase,
+    RenameUserUseCase,
   ],
-  exports: [USER_REPOSITORY, GrantUserRoleUseCase],
+  exports: [USER_REPOSITORY, GrantUserRoleUseCase, RenameUserUseCase],
 })
 export class IdentityModule {}
