@@ -1,4 +1,4 @@
-import type { SearchOffersInput } from '@colheita/contracts';
+import type { SearchOffersInput, SearchServiceProvidersInput } from '@colheita/contracts';
 
 /** Chaves do React Query num só lugar, para invalidar o cache sem erro de digitação. */
 export const queryKeys = {
@@ -10,5 +10,7 @@ export const queryKeys = {
   farmSummary: ['farm-summary'] as const,
   donations: ['donations'] as const,
   impactIndicators: ['impact-indicators'] as const,
-  myProfile: (role: 'producer' | 'buyer' | 'ngo') => ['my-profile', role] as const,
+  myProfile: (role: 'producer' | 'buyer' | 'ngo' | 'service_provider') => ['my-profile', role] as const,
+  availableServiceProviders: (input: SearchServiceProvidersInput) => ['available-service-providers', input] as const,
+  serviceRequests: ['service-requests'] as const,
 };
