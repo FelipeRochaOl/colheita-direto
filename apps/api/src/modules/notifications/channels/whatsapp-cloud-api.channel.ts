@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AppConfigService } from '../../../shared/config/app-config.service';
-import { NotificationMessage, NotificationRecipient } from '../notification-message';
+import { NotificationMessage, NotificationRecipient, NotificationTemplate } from '../notification-message';
 import { NotificationChannel } from './notification-channel';
 
 const CONVERSATION_WINDOW_MILLISECONDS = 24 * 60 * 60 * 1000;
@@ -70,14 +70,28 @@ export class WhatsAppCloudApiChannel implements NotificationChannel {
       template: {
         name: message.template.name,
         language: { code: message.template.languageCode },
-        components: [
-          {
-            type: 'body',
-            parameters: message.template.bodyParameters.map((parameter) => ({ type: 'text', text: parameter })),
-          },
-        ],
+        components: this.buildTemplateComponents(message.template),
       },
     };
+  }
+
+  private buildTemplateComponents(template: NotificationTemplate) {
+    const components: object[] = [
+      {
+        type: 'body',
+        parameters: template.bodyParameters.map((parameter) => ({ type: 'text', text: parameter })),
+      },
+    ];
+    // Template de autenticação: o botão "copiar código" é o índice 0 e recebe o mesmo código.
+    if (template.copyCodeButtonParameter) {
+      components.push({
+        type: 'button',
+        sub_type: 'url',
+        index: '0',
+        parameters: [{ type: 'text', text: template.copyCodeButtonParameter }],
+      });
+    }
+    return components;
   }
 
   private async postToGraphApi(body: object): Promise<void> {
