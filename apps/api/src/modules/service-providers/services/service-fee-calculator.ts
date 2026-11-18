@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-/** Tabela de referência do MVP. Valida-se no piloto e depois passa a vir de cada prestador. */
+/** Tabela de referência: usada só quando o prestador escolhido ainda não divulgou preço próprio. */
 const FREIGHT_BASE_FEE = 25;
 const FREIGHT_FEE_PER_KM = 1.8;
 const REFRIGERATED_FREIGHT_MULTIPLIER = 1.3;
