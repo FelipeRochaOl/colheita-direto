@@ -40,6 +40,11 @@ export class Ngo {
     return this.props.isApproved;
   }
 
+  /** CNPJ fica de fora: foi conferido na aprovação da organização. */
+  updateProfile(changes: Pick<NgoProps, 'name' | 'location' | 'address' | 'pickupRadiusKm'>): void {
+    Object.assign(this.props, changes);
+  }
+
   approve(): void {
     this.props.isApproved = true;
   }
