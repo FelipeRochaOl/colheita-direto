@@ -1,5 +1,5 @@
-import { useRegisterProducer } from '@colheita/api-client';
-import type { GeoPoint } from '@colheita/contracts';
+import { useRegisterProducer, useUpdateMyProducerProfile } from '@colheita/api-client';
+import type { GeoPoint, ProducerProfile } from '@colheita/contracts';
 import { Alert, Button, Form, Input, Select } from 'antd';
 import { LocationField } from './location-field';
 import { PRIVACY_POLICY_VERSION, PrivacyConsentField } from './privacy-consent-field';
@@ -14,21 +14,38 @@ interface ProducerSignupValues {
   familyFarmRegistration?: string;
 }
 
-export function ProducerSignupForm({ onRegistered }: { onRegistered: () => void }) {
+/** Cadastro do produtor; com `profile` vira a edição de "Meus dados". */
+export function ProducerSignupForm({
+  onRegistered,
+  profile,
+}: {
+  onRegistered: () => void;
+  profile?: ProducerProfile;
+}) {
   const registerProducer = useRegisterProducer();
+  const updateProfile = useUpdateMyProducerProfile();
+  const isEditing = Boolean(profile);
+  const mutation = isEditing ? updateProfile : registerProducer;
   return (
     <Form<ProducerSignupValues>
       layout="vertical"
       requiredMark={false}
+      initialValues={profile}
       onFinish={(values) =>
-        registerProducer.mutate(
-          { ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION },
-          { onSuccess: onRegistered },
-        )
+        isEditing
+          ? updateProfile.mutate(
+              // CAF vazio vem como null do perfil salvo; a API espera ausente
+              { ...values, familyFarmRegistration: values.familyFarmRegistration || undefined },
+              { onSuccess: onRegistered },
+            )
+          : registerProducer.mutate(
+              { ...values, acceptedPrivacyPolicyVersion: PRIVACY_POLICY_VERSION },
+              { onSuccess: onRegistered },
+            )
       }
     >
-      {registerProducer.error && (
-        <Alert type="error" showIcon message={registerProducer.error.message} className="mb-4!" />
+      {mutation.error && (
+        <Alert type="error" showIcon message={mutation.error.message} className="mb-4!" />
       )}
       <Form.Item name="name" label="Seu nome" rules={[{ required: true }]}>
         <Input size="large" />
@@ -49,7 +66,7 @@ export function ProducerSignupForm({ onRegistered }: { onRegistered: () => void 
         label="Localização da propriedade"
         rules={[{ required: true, message: 'Use o botão para marcar a localização' }]}
       >
-        <LocationField label="Estou na propriedade" />
+        <LocationField label={isEditing ? 'Atualizar: estou na propriedade' : 'Estou na propriedade'} />
       </Form.Item>
       <Form.Item name="crops" label="O que você planta" rules={[{ required: true }]}>
         <Select mode="tags" size="large" placeholder="tomate, alface, banana…" />
@@ -60,9 +77,9 @@ export function ProducerSignupForm({ onRegistered }: { onRegistered: () => void 
       >
         <Input size="large" />
       </Form.Item>
-      <PrivacyConsentField />
-      <Button type="primary" htmlType="submit" size="large" loading={registerProducer.isPending}>
-        Criar perfil de produtor
+      {!isEditing && <PrivacyConsentField />}
+      <Button type="primary" htmlType="submit" size="large" loading={mutation.isPending}>
+        {isEditing ? 'Salvar alterações' : 'Criar perfil de produtor'}
       </Button>
     </Form>
   );
