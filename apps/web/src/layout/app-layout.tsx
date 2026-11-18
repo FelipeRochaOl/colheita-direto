@@ -57,6 +57,7 @@ export function AppLayout() {
   const navigationLinks = [...PUBLIC_LINKS, ...(hasRole('producer') ? [] : [PRODUCER_INVITE_LINK])];
 
   const accountMenuItems: MenuProps['items'] = [
+    { key: '/meus-dados', label: 'Meus dados' },
     { key: '/cadastro', label: 'Adicionar perfil' },
     { type: 'divider', key: 'divider' },
     { key: 'logout', label: 'Sair', danger: true },
