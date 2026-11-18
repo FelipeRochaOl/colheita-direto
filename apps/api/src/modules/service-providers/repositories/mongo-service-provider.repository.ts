@@ -55,6 +55,12 @@ export class MongoServiceProviderRepository implements ServiceProviderRepository
       document: document.document,
       phoneNumber: document.phoneNumber,
       serviceTypes: document.serviceTypes,
+      offerings: (document.offerings ?? []).map((offering) => ({
+        serviceType: offering.serviceType,
+        price: offering.price,
+        baseFee: offering.baseFee ?? 0,
+        description: offering.description ?? null,
+      })),
       baseLocation: fromGeoJsonPoint(document.baseLocation),
       serviceRadiusKm: document.serviceRadiusKm,
       vehicleCapacityKg: document.vehicleCapacityKg,
