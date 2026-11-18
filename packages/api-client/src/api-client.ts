@@ -1,5 +1,7 @@
 import type {
   AuthSession,
+  AvailableServiceProvider,
+  CreateServiceRequestInput,
   BuyerProfile,
   ConfirmDonationReceiptInput,
   ConfirmLotDestinationInput,
@@ -18,9 +20,14 @@ import type {
   RegisterProducerInput,
   RegisterServiceProviderInput,
   SearchOffersInput,
+  SearchServiceProvidersInput,
+  ServiceProviderProfile,
+  ServiceRequest,
+  ServiceRequestBoard,
   UpdateBuyerProfileInput,
   UpdateNgoProfileInput,
   UpdateProducerProfileInput,
+  UpdateServiceProviderProfileInput,
 } from '@colheita/contracts';
 import { ApiError } from './api-error';
 import { SessionStorage } from './session-storage';
@@ -110,6 +117,31 @@ export class ColheitaApiClient {
   }
   updateMyNgoProfile(input: UpdateNgoProfileInput) {
     return this.requestNewSession('/ngos/me', input, 'PUT');
+  }
+
+  getMyServiceProviderProfile() {
+    return this.request<ServiceProviderProfile>('GET', '/service-providers/me');
+  }
+  updateMyServiceProviderProfile(input: UpdateServiceProviderProfileInput) {
+    return this.requestNewSession('/service-providers/me', input, 'PUT');
+  }
+
+  // ---------- Contratação de serviços (produtor ↔ prestador) ----------
+  searchServiceProviders(input: SearchServiceProvidersInput) {
+    const query = new URLSearchParams({ serviceType: input.serviceType, quantity: String(input.quantity ?? 1) });
+    return this.request<AvailableServiceProvider[]>('GET', `/service-providers/available?${query.toString()}`);
+  }
+  createServiceRequest(input: CreateServiceRequestInput) {
+    return this.request<ServiceRequest>('POST', '/service-requests', input);
+  }
+  listServiceRequests() {
+    return this.request<ServiceRequestBoard>('GET', '/service-requests');
+  }
+  respondServiceRequest(serviceRequestId: string, accept: boolean) {
+    return this.request<ServiceRequest>(
+      'POST',
+      `/service-requests/${serviceRequestId}/${accept ? 'acceptance' : 'refusal'}`,
+    );
   }
 
   // ---------- Lotes ----------
