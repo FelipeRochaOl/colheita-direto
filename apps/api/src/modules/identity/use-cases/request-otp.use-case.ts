@@ -22,7 +22,12 @@ export class RequestOtpUseCase {
       { phoneNumber: input.phoneNumber, lastWhatsAppInboundAt: existingUser?.toNotificationRecipient().lastWhatsAppInboundAt ?? null },
       {
         text: `Colheita Direta: seu código de acesso é ${plainCode}. Ele vale por 10 minutos.`,
-        template: { name: 'codigo_de_acesso', languageCode: 'pt_BR', bodyParameters: [plainCode] },
+        template: {
+          name: 'codigo_de_acesso',
+          languageCode: 'pt_BR',
+          bodyParameters: [plainCode],
+          copyCodeButtonParameter: plainCode,
+        },
       },
     );
   }
