@@ -3,6 +3,22 @@ import { SERVICE_TYPES } from '@colheita/contracts';
 import type { ServiceType } from '@colheita/contracts';
 import { GeoPointDocument, GeoPointSchema } from '../../../shared/database/geo-point.schema';
 
+@Schema({ _id: false })
+export class ServiceOfferingDocument {
+  @Prop({ type: String, enum: SERVICE_TYPES, required: true })
+  serviceType: ServiceType;
+
+  @Prop({ required: true })
+  price: number;
+
+  @Prop({ default: 0 })
+  baseFee: number;
+
+  @Prop({ type: String, default: null })
+  description: string | null;
+}
+const ServiceOfferingSchema = SchemaFactory.createForClass(ServiceOfferingDocument);
+
 @Schema({ collection: 'service_providers' })
 export class ServiceProviderDocument {
   @Prop({ type: String })
@@ -19,6 +35,9 @@ export class ServiceProviderDocument {
 
   @Prop({ type: [String], enum: SERVICE_TYPES, required: true })
   serviceTypes: ServiceType[];
+
+  @Prop({ type: [ServiceOfferingSchema], default: [] })
+  offerings: ServiceOfferingDocument[];
 
   @Prop({ type: GeoPointSchema, required: true, index: '2dsphere' })
   baseLocation: GeoPointDocument;
