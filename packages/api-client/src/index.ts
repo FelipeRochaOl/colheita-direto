@@ -8,3 +8,4 @@ export * from './hooks/use-donation-hooks';
 export * from './hooks/use-farm-hooks';
 export * from './hooks/use-harvest-lot-hooks';
 export * from './hooks/use-marketplace-hooks';
+export * from './hooks/use-profile-hooks';
