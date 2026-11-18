@@ -10,4 +10,5 @@ export const queryKeys = {
   farmSummary: ['farm-summary'] as const,
   donations: ['donations'] as const,
   impactIndicators: ['impact-indicators'] as const,
+  myProfile: (role: 'producer' | 'buyer' | 'ngo') => ['my-profile', role] as const,
 };
