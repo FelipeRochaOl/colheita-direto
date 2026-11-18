@@ -43,6 +43,11 @@ export class Buyer {
     return this.props.paymentCustomerId;
   }
 
+  /** Documento e telefone ficam de fora: o documento está vinculado ao cliente no gateway de pagamento. */
+  updateProfile(changes: Pick<BuyerProps, 'name' | 'buyerType' | 'deliveryLocation' | 'deliveryAddress'>): void {
+    Object.assign(this.props, changes);
+  }
+
   linkPaymentCustomer(customerId: string): void {
     this.props.paymentCustomerId = customerId;
   }
