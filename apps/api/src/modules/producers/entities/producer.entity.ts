@@ -49,6 +49,11 @@ export class Producer {
     return Boolean(this.props.familyFarmRegistration);
   }
 
+  /** Dados que o próprio produtor pode corrigir em "Meus dados". */
+  updateProfile(changes: Pick<ProducerProps, 'name' | 'farmName' | 'farmLocation' | 'city' | 'state' | 'crops' | 'familyFarmRegistration'>): void {
+    Object.assign(this.props, { ...changes, state: changes.state.toUpperCase(), crops: [...changes.crops] });
+  }
+
   linkPaymentWallet(walletId: string): void {
     this.props.paymentWalletId = walletId;
   }
