@@ -60,6 +60,11 @@ export class User {
     this.props.privacyConsent = { policyVersion: privacyPolicyVersion, acceptedAt: new Date() };
   }
 
+  /** Nome exibido na conta, atualizado quando o usuário edita "Meus dados". */
+  rename(name: string): void {
+    this.props.name = name;
+  }
+
   recordWhatsAppInbound(receivedAt: Date): void {
     this.props.lastWhatsAppInboundAt = receivedAt;
   }
