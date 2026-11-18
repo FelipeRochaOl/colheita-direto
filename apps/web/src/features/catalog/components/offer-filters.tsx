@@ -29,12 +29,14 @@ export function OfferFilters({
     <div className="flex flex-wrap items-center gap-3 mb-6">
       <Input.Search
         placeholder="Produto (ex.: tomate)"
+        aria-label="Buscar produto"
         allowClear
         className="max-w-xs"
         defaultValue={filters.crop}
         onSearch={(crop) => onChange({ ...filters, crop: crop || undefined })}
       />
       <Checkbox.Group
+        aria-label="Classe de qualidade"
         options={GRADE_OPTIONS}
         value={filters.grades}
         onChange={(grades) => onChange({ ...filters, grades: grades as QualityGrade[] })}
@@ -44,6 +46,7 @@ export function OfferFilters({
       </Button>
       {filters.latitude !== undefined && (
         <Select
+          aria-label="Distância máxima"
           value={filters.maxDistanceKm ?? 100}
           onChange={(maxDistanceKm) => onChange({ ...filters, maxDistanceKm })}
           options={[30, 50, 100, 200].map((km) => ({ label: `até ${km} km`, value: km }))}
@@ -52,6 +55,7 @@ export function OfferFilters({
       <InputNumber
         prefix="R$"
         placeholder="Preço máx./cx"
+        aria-label="Preço máximo por caixa"
         className="w-44!"
         min={1}
         value={filters.maxPricePerBox}
