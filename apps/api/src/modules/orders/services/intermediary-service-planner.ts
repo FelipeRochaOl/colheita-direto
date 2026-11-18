@@ -6,6 +6,7 @@ import {
   SERVICE_PROVIDER_REPOSITORY,
   ServiceProviderRepository,
 } from '../../service-providers/repositories/service-provider.repository';
+import { ServiceProvider } from '../../service-providers/entities/service-provider.entity';
 import { ServiceFeeCalculator } from '../../service-providers/services/service-fee-calculator';
 import { DeliveryMode, ServiceCharge } from '../entities/order.entity';
 
@@ -34,25 +35,36 @@ export class IntermediaryServicePlanner {
     };
     const charges: ServiceCharge[] = [];
 
+    // Preço divulgado pelo prestador escolhido; a tabela de referência só cobre quem ainda não divulgou
     if (input.deliveryMode === 'PLATFORM_FREIGHT') {
       charges.push(
-        await this.buildCharge('TRANSPORT', input.pickupLocation, this.serviceFeeCalculator.calculateFreightFee(feeInput)),
+        await this.buildCharge('TRANSPORT', input.pickupLocation, (provider) =>
+          provider.estimatePrice('TRANSPORT', feeInput.distanceKm) ?? this.serviceFeeCalculator.calculateFreightFee(feeInput),
+        ),
       );
     }
     if (input.extraServices.includes('COLD_STORAGE')) {
       charges.push(
-        await this.buildCharge('COLD_STORAGE', input.pickupLocation, this.serviceFeeCalculator.calculateColdStorageFee(feeInput)),
+        await this.buildCharge('COLD_STORAGE', input.pickupLocation, (provider) =>
+          provider.estimatePrice('COLD_STORAGE', feeInput.boxes) ?? this.serviceFeeCalculator.calculateColdStorageFee(feeInput),
+        ),
       );
     }
     if (input.extraServices.includes('PACKING')) {
       charges.push(
-        await this.buildCharge('PACKING', input.pickupLocation, this.serviceFeeCalculator.calculatePackingFee(feeInput)),
+        await this.buildCharge('PACKING', input.pickupLocation, (provider) =>
+          provider.estimatePrice('PACKING', feeInput.boxes) ?? this.serviceFeeCalculator.calculatePackingFee(feeInput),
+        ),
       );
     }
     return charges;
   }
 
-  private async buildCharge(serviceType: ServiceType, location: GeoPoint, amount: number): Promise<ServiceCharge> {
+  private async buildCharge(
+    serviceType: ServiceType,
+    location: GeoPoint,
+    priceFor: (provider: ServiceProvider) => number,
+  ): Promise<ServiceCharge> {
     const [nearestProvider] = await this.serviceProviderRepository.findApprovedServingLocation(serviceType, location);
     if (!nearestProvider) {
       throw new BusinessRuleViolationError(`Ainda não há prestador de ${serviceType} atendendo esta região`);
@@ -61,7 +73,7 @@ export class IntermediaryServicePlanner {
       serviceType,
       serviceProviderId: nearestProvider.id,
       serviceProviderWalletId: nearestProvider.paymentWalletId,
-      amount,
+      amount: priceFor(nearestProvider),
     };
   }
 }
