@@ -70,6 +70,7 @@ export function CartPage() {
                   min={1}
                   max={offer.availableBoxes}
                   value={boxes}
+                  aria-label={`Caixas de ${offer.crop}`}
                   onChange={(value) => updateBoxes(offer.id, value ?? 1)}
                   addonAfter="cx"
                 />
@@ -77,7 +78,7 @@ export function CartPage() {
                 <Button
                   type="text"
                   icon={<DeleteOutlined />}
-                  aria-label="Remover"
+                  aria-label={`Remover ${offer.crop} do carrinho`}
                   onClick={() => removeItem(offer.id)}
                 />
               </div>
@@ -85,7 +86,11 @@ export function CartPage() {
           ))}
         </div>
         <Card title="Entrega e pagamento">
+          <div id="delivery-mode-label" className="mb-2 font-medium">
+            Como receber
+          </div>
           <Radio.Group
+            aria-labelledby="delivery-mode-label"
             value={deliveryMode}
             onChange={(event) => setDeliveryMode(event.target.value)}
             className="flex! flex-col! gap-2"
@@ -94,8 +99,12 @@ export function CartPage() {
             <Radio value="PRODUCER_DELIVERY">O produtor entrega</Radio>
             <Radio value="PICKUP">Retiro no sítio</Radio>
           </Radio.Group>
+          <div id="extra-services-label" className="mt-5 mb-2 font-medium">
+            Serviços extras (opcional)
+          </div>
           <Checkbox.Group
-            className="mt-4! flex! flex-col! gap-1"
+            aria-labelledby="extra-services-label"
+            className="flex! flex-col! gap-1"
             value={extraServices}
             onChange={(values) => setExtraServices(values as CreateOrderInput['extraServices'])}
             options={[
