@@ -25,6 +25,6 @@ export class SearchOffersUseCase {
         ? { location: buyerLocation, maxDistanceKm: input.maxDistanceKm ?? DEFAULT_MAX_DISTANCE_KM }
         : undefined,
     });
-    return Promise.all(offers.map((offer) => this.offerPresenter.present(offer, buyerLocation)));
+    return this.offerPresenter.presentMany(offers, buyerLocation);
   }
 }
