@@ -20,19 +20,33 @@ export function ExpenseForm() {
   return (
     <Form
       form={form}
-      layout="inline"
-      className="gap-y-3"
+      layout="vertical"
+      requiredMark={false}
       onFinish={(values) => registerExpense.mutate(values, { onSuccess: () => form.resetFields() })}
     >
-      <Form.Item name="description" rules={[{ required: true, message: 'Descreva' }]}>
-        <Input placeholder="Ex.: adubo orgânico" />
-      </Form.Item>
-      <Form.Item name="category" rules={[{ required: true, message: 'Categoria' }]}>
-        <Select placeholder="Categoria" options={EXPENSE_CATEGORY_OPTIONS} className="min-w-44" />
-      </Form.Item>
-      <Form.Item name="amount" rules={[{ required: true, message: 'Valor' }]}>
-        <InputNumber prefix="R$" min={0.01} placeholder="Valor" />
-      </Form.Item>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4">
+        <Form.Item
+          name="description"
+          label="Descrição"
+          rules={[{ required: true, message: 'Descreva a despesa' }]}
+        >
+          <Input placeholder="Ex.: adubo orgânico" />
+        </Form.Item>
+        <Form.Item
+          name="category"
+          label="Categoria"
+          rules={[{ required: true, message: 'Escolha a categoria' }]}
+        >
+          <Select placeholder="Escolha" options={EXPENSE_CATEGORY_OPTIONS} />
+        </Form.Item>
+        <Form.Item
+          name="amount"
+          label="Valor"
+          rules={[{ required: true, message: 'Informe o valor' }]}
+        >
+          <InputNumber prefix="R$" min={0.01} placeholder="0,00" className="w-full!" />
+        </Form.Item>
+      </div>
       <Button type="primary" htmlType="submit" loading={registerExpense.isPending}>
         Anotar despesa
       </Button>
