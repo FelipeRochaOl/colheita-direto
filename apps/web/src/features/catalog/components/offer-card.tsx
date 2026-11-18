@@ -3,6 +3,7 @@ import type { Offer } from '@colheita/contracts';
 import { describeQualityGrade, MoneyText, QualityGradeBadge, WeightText } from '@colheita/ui-web';
 import { Link } from 'react-router';
 import { capitalize } from '../../../utils/labels';
+import { CropPhoto } from './crop-photo';
 
 export function OfferCard({ offer }: { offer: Offer }) {
   return (
@@ -11,11 +12,10 @@ export function OfferCard({ offer }: { offer: Offer }) {
       className="group flex h-full flex-col overflow-hidden rounded-[24px] bg-white text-evergreen! ring-1 ring-black/5 transition-all hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(0,30,43,0.35)]"
     >
       <div className="relative h-48 overflow-hidden bg-mint">
-        <img
+        <CropPhoto
           src={offer.photoUrls[0]}
           alt={`${offer.crop} de ${offer.producerName}`}
           className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
         />
         <span className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full bg-white/95 py-1 pl-1 pr-3 text-xs font-semibold shadow-sm">
           <QualityGradeBadge grade={offer.grade} />
